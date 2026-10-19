@@ -1,35 +1,35 @@
 ---
 name: add-page
-description: 새로운 페이지(라우트)를 생성할 때 SSR/CSR 듀얼 파일 패턴과 일본어 UI 규칙을 준수하여 추가하는 스킬
+description: 新しいページ（ルート）を作成する際、SSR/CSRデュアルファイルパターンと日本語UI規約を遵守して追加するスキル
 ---
 
-# 새 페이지 추가 워크플로우 (Add Page Workflow)
+# 新規ページ追加ワークフロー（Add Page Workflow）
 
-> **언어 규칙**: 사용자가 한국어로 페이지 생성을 요청하더라도, **UI 텍스트, 페이지 제목(Metadata), 버튼 라벨, 스낵바/알림 문구, 플레이스홀더는 반드시 자연스러운 일본어(敬体: です・ます)**로 작성합니다.
+> **UI言語規約**: 画面上のUIテキスト、ページタイトル（Metadata）、ボタンラベル、通知メッセージ、プレースホルダーは、すべて**自然な日本語（丁寧語/敬体: です・ます）**で作成してください。
 
-## 1. 파일 생성 구조
-새로운 페이지(`/notice`)를 추가할 때는 반드시 아래 3개 파일을 생성합니다:
-1. `src/app/notice/page.tsx` (서버 컴포넌트: 메타데이터 및 SSR 데이터 페칭)
-2. `src/app/notice/NoticeClient.tsx` (클라이언트 컴포넌트: 인터랙션 및 상태)
-3. `src/styles/pages/notice.scss` (스타일시트: 컴포넌트 동반 스타일)
+## 1. ファイル構成
+新規ページ（`/notice` など）を追加する際は、必ず以下の3つのファイルを作成します。
+1. `src/app/notice/page.tsx`（Server Component: メタデータおよびSSRデータフェッチ）
+2. `src/app/notice/NoticeClient.tsx`（Client Component: インタラクションおよびUIステート）
+3. `src/styles/pages/notice.scss`（スタイルシート: ページ専用スタイル）
 
-## 2. Server Component (`page.tsx`) 템플릿
+## 2. Server Component (`page.tsx`) テンプレート
 ```tsx
 import { generatePageMetadata } from '@/common/lib/Metadata';
 import NoticeClient from './NoticeClient';
 
-// 메타데이터 타이틀 및 설명은 일본어로 작성
+// メタデータのタイトルと説明文は日本語で記述
 export async function generateMetadata() {
-  return generatePageMetadata('お知らせ一覧', 'ワンチャンの最新のお知らせやアップデート情報をご確認いただけます。');
+  return generatePageMetadata('お知らせ一覧', '最新のお知らせやアップデート情報をご確認いただけます。');
 }
 
 export default async function NoticePage() {
-  // SSR 데이터 페칭이 필요한 경우 여기서 수행하여 NoticeClient로 props 전달
+  // SSRデータフェッチが必要な場合はここで実行し、NoticeClientへpropsとして渡す
   return <NoticeClient />;
 }
 ```
 
-## 3. Client Component (`NoticeClient.tsx`) 템플릿
+## 3. Client Component (`NoticeClient.tsx`) テンプレート
 ```tsx
 'use client';
 
@@ -41,7 +41,7 @@ export default function NoticeClient() {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleAction = () => {
-    // 사용자 알림 메시지도 반드시 자연스러운 일본어로 작성
+    // ユーザー通知メッセージも自然な日本語で記述
     enqueueSnackbar('正常に処理が完了しました。', { variant: 'success' });
   };
 
@@ -61,7 +61,7 @@ export default function NoticeClient() {
 }
 ```
 
-## 4. 스타일시트 (`src/styles/pages/*.scss`) 템플릿
+## 4. スタイルシート (`src/styles/pages/*.scss`) テンプレート
 ```scss
 @use "../base/variables" as *;
 @use "../base/mixins" as *;
@@ -89,5 +89,5 @@ export default function NoticeClient() {
 }
 ```
 
-## 5. 검증
-작업 완료 후 반드시 `yarn lint` 및 `yarn build`를 실행하여 정적 페이지 생성과 빌드 성공을 검증합니다.
+## 5. 検証手順
+作業完了後、必ず `yarn lint` および `yarn build` を実行し、静的ページの生成およびビルド成功を確認してください。

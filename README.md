@@ -1,12 +1,12 @@
 # Web Application Viewer Boilerplate
 
-Next.js 15+ App Router 기반의 현대적인 웹 서비스 보일러플레이트입니다. Material UI(MUI v6), SCSS, Redux Toolkit, 그리고 AI 에이전트 지침 체계를 기본 탑재하고 있습니다.
+Next.js 15+ App RouterをベースとしたモダンなWebサービス向けボイラープレートです。Material UI (MUI v6)、SCSS、Redux Toolkit、そしてAIエージェント向けの行動規範・ナレッジ体系を標準搭載しています。
 
 ---
 
-## 🚀 새로운 서비스 생성 시 설정 (Quick Setup)
+## 🚀 新規サービス立ち上げ時の設定（Quick Setup）
 
-본 저장소를 복사하여 새로운 서비스를 시작할 때는 **오직 아래 2곳만 수정**하시면 프로젝트 전체(UI, 메타데이터, 브랜딩)가 즉시 연동됩니다:
+本リポジトリを複製して新しいサービスを立ち上げる際は、**以下の2箇所のみを変更**するだけで、プロジェクト全体（UI、メタデータ、ブランディング）が即座に連動します。
 
 ### 1. `package.json`
 ```json
@@ -15,49 +15,49 @@ Next.js 15+ App Router 기반의 현대적인 웹 서비스 보일러플레이�
 }
 ```
 
-### 2. `.env.development` (및 `.env.production`)
+### 2. `.env.development`（および `.env.production`）
 ```env
-NEXT_PUBLIC_APP_NAME="당신의 서비스명"
-NEXT_PUBLIC_COPYRIGHT="회사명"
-NEXT_DEFAULT_METADATA_TITLE="서비스명"
-NEXT_DEFAULT_METADATA_DESCRIPTION="서비스 소개 문구"
+NEXT_PUBLIC_APP_NAME="サービス名"
+NEXT_PUBLIC_COPYRIGHT="会社名"
+NEXT_DEFAULT_METADATA_TITLE="サービス名"
+NEXT_DEFAULT_METADATA_DESCRIPTION="サービス紹介文"
 ```
 
 ---
 
-## 🛠️ 기술 스택 (Tech Stack)
+## 🛠️ 技術スタック（Tech Stack）
 
-- **Framework**: Next.js 15+ (App Router)
-- **Library**: React 19, TypeScript 5
-- **UI & Styling**: Material UI (MUI v6), SCSS (`sass`)
-- **State Management**: Redux Toolkit, Redux Persist
-- **HTTP Client**: Axios (중앙화된 싱글톤 인스턴스)
-- **Utilities**: Dayjs (Asia/Tokyo preconfigured), Notistack (스낵바 알림)
-
----
-
-## 🧭 아키텍처 및 에이전트 지침
-
-- [ARCHITECTURE.md](ARCHITECTURE.md): 변경 유형별 시작 경로(Starting Paths) & 레이어 책임 지도
-- [TECH.md](TECH.md): 10가지 절대 금지 규칙(Negative Constraints) & 코드 컨벤션
-- [AGENTS.md](AGENTS.md): AI 에이전트 6단계 작업 프로토콜
-- [.agents/learnings/](.agents/learnings/): 축적된 AI 학습 및 주의사항 지식 베이스
-- [.agents/skills/](.agents/skills/): 페이지 및 API 추가 표준 스킬 가이드
+- **フレームワーク**: Next.js 15+ (App Router)
+- **ライブラリ**: React 19, TypeScript 5
+- **UI & スタイリング**: Material UI (MUI v6), SCSS (`sass`)
+- **状態管理**: Redux Toolkit, Redux Persist
+- **HTTPクライアント**: Axios（中央集権型シングルトンインスタンス）
+- **ユーティリティ**: Dayjs（日本標準時 `Asia/Tokyo`、ロケール `ja` 設定済み）、Notistack（スナックバー通知）
 
 ---
 
-## 💻 실행 및 검증 (Commands)
+## 🧭 アーキテクチャおよびエージェント規約
+
+- [ARCHITECTURE.md](ARCHITECTURE.md): 変更種別ごとの着手パス（Starting Paths）とレイヤー責務マップ
+- [TECH.md](TECH.md): 10大禁止ルール（Negative Constraints）およびコード規約
+- [AGENTS.md](AGENTS.md): AIエージェントの6段階作業プロトコル
+- [.agents/learnings/](.agents/learnings/): 過去のトラブルと解決策を蓄積するナレッジベース
+- [.agents/skills/](.agents/skills/): ページおよびAPI追加の標準スキルガイド
+
+---
+
+## 💻 実行および検証コマンド（Commands）
 
 ```bash
-# 의존성 설치
+# 依存関係のインストール
 yarn install
 
-# 개발 서버 실행 (http://localhost:3000)
+# 開発サーバーの起動 (http://localhost:3000)
 yarn dev
 
-# 린트 검증
+# リント検証
 yarn lint
 
-# 프로덕션 빌드 검증
+# プロダクションビルド検証
 yarn build
 ```
