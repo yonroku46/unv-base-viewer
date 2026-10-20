@@ -2,19 +2,34 @@ export {};
 
 declare global {
   interface User {
-    id: string;
-    email: string;
-    name: string;
-    nickname?: string;
-    role?: 'USER' | 'ADMIN' | 'PARTNER';
+    userId: string;
+    userName: string;
+    mail: string;
+    profileImg?: string;
     token?: string;
     refreshToken?: string;
+    roleId?: number;
+    // エイリアス
+    id?: string;
+    email?: string;
+    name?: string;
   }
 
-  interface CommonResponse<T = any> {
-    success: boolean;
-    data: T;
+  interface InformationItem {
+    messageId?: string;
     message?: string;
-    errorCode?: string;
+  }
+
+  interface ErrorItem extends InformationItem {
+    parameter?: string;
+    errorDetail?: string;
+  }
+
+  interface BaseResponse<T = any> {
+    resultCode: number;
+    hasErrors: boolean;
+    informations?: InformationItem[];
+    errors?: ErrorItem[];
+    responseData?: T;
   }
 }

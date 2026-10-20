@@ -47,6 +47,42 @@
           color: var(--primary-color);
         }
       }
+
+      .user-profile-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding-left: 0.5rem;
+
+        .user-avatar {
+          background-color: var(--primary-color);
+          color: #ffffff;
+        }
+
+        .user-name {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: var(--foreground);
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .logout-btn {
+          font-size: 0.8rem;
+          padding: 3px 8px;
+          border-color: var(--gray-alpha-300);
+          color: var(--gray-alpha-600);
+          text-transform: none;
+
+          &:hover {
+            border-color: var(--gray-alpha-500);
+            background-color: var(--gray-alpha-100);
+            color: var(--foreground);
+          }
+        }
+      }
     }
   }
 }

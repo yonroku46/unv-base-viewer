@@ -1,0 +1,97 @@
+@use '@/styles/base/variables' as *;
+@use '@/styles/base/mixins' as *;
+
+.auth-dialog-paper {
+  border-radius: 12px !important;
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: var(--card-shadow) !important;
+  background-color: var(--background) !important;
+}
+
+.auth-dialog-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+
+  .auth-dialog-close-btn {
+    color: var(--gray-alpha-600);
+    padding: 4px;
+
+    &:hover {
+      color: var(--foreground);
+      background-color: var(--gray-alpha-100);
+    }
+  }
+}
+
+.auth-dialog-content {
+  .auth-tabs {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-alpha-200);
+
+    .MuiTab-root {
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: none;
+      color: var(--gray-alpha-600);
+
+      &.Mui-selected {
+        color: var(--primary-color);
+      }
+    }
+
+    .MuiTabs-indicator {
+      background-color: var(--primary-color);
+    }
+  }
+
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+
+    .auth-submit-btn {
+      margin-top: 0.5rem;
+      padding: 0.65rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: none;
+      border-radius: 8px;
+      box-shadow: none;
+
+      &:hover {
+        box-shadow: var(--box-shadow);
+      }
+    }
+  }
+
+  .auth-divider-wrap {
+    margin: 1.25rem 0;
+
+    .MuiDivider-root {
+      color: var(--gray-alpha-500);
+      font-size: 0.8rem;
+
+      &::before,
+      &::after {
+        border-top: 1px solid var(--gray-alpha-200);
+      }
+    }
+  }
+
+  .google-auth-btn {
+    border-color: var(--gray-alpha-300);
+    color: var(--foreground);
+    text-transform: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.6rem;
+    border-radius: 8px;
+
+    &:hover {
+      border-color: var(--gray-alpha-500);
+      background-color: var(--gray-alpha-50);
+    }
+  }
+}

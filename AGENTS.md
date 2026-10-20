@@ -45,6 +45,9 @@
   - 不自然な直訳や他言語の混入を厳禁とします。
 - **技術スタック**: Next.js 15+ (App Router), React 19, TypeScript 5, SCSS (`sass`), MUI v6, Redux Toolkit。
 - **バックエンド通信**: Spring Boot / REST API（中央Axiosシングルトンインスタンス経由）。
+- **Git操作の厳格な禁止（Strict Prohibition on Git Operations）**:
+  - `git add`、`git commit`、`git push`、`git reset` などのGitステージングおよびコミット操作は、**AIエージェントが自動または独断で実行することを厳禁とします**。
+  - バージョン管理・コミット・プッシュのタイミングおよびスコープは、すべてユーザー自身が管理・判断します。
 
 ---
 
