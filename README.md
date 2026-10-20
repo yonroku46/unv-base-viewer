@@ -40,7 +40,7 @@ NEXT_DEFAULT_METADATA_DESCRIPTION="サービス紹介文"
 
 - [ARCHITECTURE.md](ARCHITECTURE.md): 変更種別ごとの着手パス（Starting Paths）とレイヤー責務マップ
 - [TECH.md](TECH.md): 10大禁止ルール（Negative Constraints）およびコード規約
-- [AGENTS.md](AGENTS.md): AIエージェントの6段階作業プロトコル
+- [AGENTS.md](AGENTS.md): AIエージェントの作業プロトコルおよび単一真実源（SSOT）規約
 - [.agents/learnings/](.agents/learnings/): 過去のトラブルと解決策を蓄積するナレッジベース
 - [.agents/skills/](.agents/skills/): ページおよびAPI追加の標準スキルガイド
 

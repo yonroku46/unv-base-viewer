@@ -4,9 +4,10 @@
 > 作業を開始する前に、以下のプロトコルと関連ドキュメントを必ず確認してください。
 >
 > 🧭 **主要参照ドキュメント**:
+>
 > - [ARCHITECTURE.md](ARCHITECTURE.md): 変更種別ごとの着手パスおよびレイヤー責務マップ
 > - [TECH.md](TECH.md): 10大禁止事項（Negative Constraints）および型・スタイル規約
-> - [.agents/learnings/](.agents/learnings/): エージェントナレッジベースおよび過去の知見・教訓
+> - [.agents/learnings/](.agents/learnings/): 過去のトラブルと解決策を蓄積するナレッジベース
 
 ---
 
@@ -15,15 +16,15 @@
 エージェントはすべての作業において、以下の6段階を順番に実施しなければなりません。
 
 ```
-[Phase 1: Explore] ──> [Phase 2: Check Learnings] ──> [Phase 3: Plan]
-                                                           │
+[Phase 1: Explore] ──> [Phase 2: Check Rules & Learnings] ──> [Phase 3: Plan]
+                                                                     │
 [Phase 6: Record Learnings] <── [Phase 5: Validate] <── [Phase 4: Implement]
 ```
 
 1. **Phase 1: Explore & Context（文脈把握）**
    - 作業開始前に、関連コード、ディレクトリ構造、`package.json`の依存関係を確認します。
-2. **Phase 2: Check Learnings（知見の確認）**
-   - [`.agents/learnings/`](.agents/learnings/)ディレクトリを確認し、変更対象の領域（`scope`）に関連する過去の教訓や注意事項を読み込みます。
+2. **Phase 2: Check Rules & Learnings（規約と過去知見の確認）**
+   - ルートの [AGENTS.md](AGENTS.md)、[TECH.md](TECH.md)、および [`.agents/learnings/`](.agents/learnings/) を確認し、変更対象領域（`scope`）に関連する過去の教訓や禁止事項を完全に把握します。
 3. **Phase 3: Plan & Design（設計・計画）**
    - SSR/CSR境界、状態管理の範囲、スタイリング規約を考慮した計画を策定します。
 4. **Phase 4: Implement（実装）**
@@ -32,8 +33,8 @@
    - コード変更後、**必ず以下の検証コマンドを実行し、成功を確認**します。
      - リント検証: `yarn lint`
      - ビルド検証: `yarn build`
-6. **Phase 6: Record Learnings（知見の記録）**
-   - ユーザーからのフィードバックや、ビルド・型チェックでの予期せぬエラーを解決した場合は、[`.agents/learnings/entries/<id>.md`](.agents/learnings/entries/)に新たな教訓を記録し、今後の作業品質を持続的に改善します。
+6. **Phase 6: Record Learnings & Update Rules（知見の記録・規約更新）**
+   - ユーザーからのフィードバックや、ビルド・型チェックでの予期せぬエラーを解決した場合は、[`.agents/learnings/entries/<id>.md`](.agents/learnings/entries/)に新たな教訓を記録し、今後の作業品質を持続的に改善します。また、憲法級の基本規則はルート `AGENTS.md` にも反映します。
 
 ---
 
@@ -43,6 +44,14 @@
 - **言語規約（Strict Constraint）**:
   - UIラベル、ボタン名、ダイアログ文言、スナックバー通知メッセージ、メタデータタイトル/説明文、プレースホルダー、コード内コメントは、すべて**自然な日本語（丁寧語/敬体: です・ます）**で記述します。
   - 不自然な直訳や他言語の混入を厳禁とします。
+- **SEO & AEO（AI回答エンジン最適化）およびRoute-First原則**:
+  - Webサービスとしての検索流入とAI推薦を最大化するため、Google等の検索エンジン（SEO）およびChatGPT・Perplexity・Gemini・Claude等のAI回答エンジン（AEO）双方に最適化されたセマンティックなHTML構造（`h1`〜`h3`, `main`, `article`, `section`）と明瞭な自然日本語テキストで設計します。
+  - **ダイアログ（モーダル）乱用の厳禁**:
+    - 固有のURLを持たないダイアログはクローラーやAI検索エンジンにインデックスされず、URL共有もできません。
+    - お知らせ、詳細画面、主要機能フローなどのコンテンツはダイアログで済ませず、**必ず個別のページ（ルート）として設計・提供**します。
+    - ダイアログの使用は、認証（ログイン/会員登録）や確認アラート（Confirm）など、ごく限定的な即時インタラクションのみに留めます。
+- **チーム開発と長期保守性のベストプラクティス（Maintainability First）**:
+  - コードは属人化や一時的な場当たり的ハックを排し、単一責任原則（SRP）、関心の分離、厳格な型安全性、一貫したディレクトリ配置を遵守したチーム開発のベストプラクティスで記述します。
 - **技術スタック**: Next.js 15+ (App Router), React 19, TypeScript 5, SCSS (`sass`), MUI v6, Redux Toolkit。
 - **バックエンド通信**: Spring Boot / REST API（中央Axiosシングルトンインスタンス経由）。
 - **Git操作の厳格な禁止（Strict Prohibition on Git Operations）**:
@@ -54,31 +63,63 @@
 ## 3. コアアーキテクチャと境界規約（Core Architecture Boundaries）
 
 ### 3.1. SSR / CSR分離（`*Client.tsx` デュアルファイルパターン）
+
 - インデックス対象の公開ページは、必ず**デュアルファイルパターン**を適用します。
   - `page.tsx`: Server Component。`generateMetadata()`、初期SSRデータフェッチ、SEOを担当。
   - `*Client.tsx`: Client Component (`"use client"`)。ブラウザ固有のインタラクションおよびUIステートを担当。
 - 管理画面やダッシュボードなどの完全認証前提のインタラクティブページは、`"use client"`単独の記述を許可します。
 
 ### 3.2. 状態管理の境界（State Boundary）
+
 - **Redux Toolkit (`@/store`)**: `auth`、`notification`など、グローバルに維持されlocalStorageへ永続化（persist）が必要な状態に限定して使用します。
 - 任意のフィーチャースライスを無秩序にReduxに追加してはなりません。
 - 不要な外部サーバー状態管理ライブラリ（React Query, SWR, Zustandなど）を重複導入しないでください。
 
 ### 3.3. API通信規約（API Layer）
+
 - ネイティブの`fetch()`やアドホックなAxiosインスタンスを直接生成してはなりません。
 - すべてのAPIリクエストは、中央シングルトン`@/api` (`ApiInstance`)および`@/api/service/*Service.ts`を経由します。
 - バックエンドのルート定数は`src/api/module/ApiRoutes.ts`に一元管理します。
 
 ### 3.4. スタイリングおよびデザインシステム規約
+
 - **CSS Modules(`.module.scss`)およびTailwind CSSの使用は禁止します。**
+- **最上位ルートスコープの必須化（クラス名衝突の防止）**:
+  - コンポーネントやダイアログのSCSSは、必ず単一のルートクラス（例: `.auth-dialog-paper`, `.app-header`, `.home-container`）の内部にすべての下位要素をネストして記述します。
+  - ルートクラスの外側にフラットなクラスを独立定義すること（クラス名衝突・スタイル干渉の恐れ）を厳禁とします。
+- **モバイルタッチ干渉防止（`@include hover` の義務化）**:
+  - モバイル端末タップ時のホバー残留（sticky hover）干渉を防止するため、直接の `&:hover` や `a:hover` 記述を禁止します。
+  - 必ず `@/styles/base/mixins` の `@mixin hover`（`@media (hover: hover) and (pointer: fine)`）を使用してください。
 - JSX内でのインラインスタイル（`style={{ ... }}`）およびMUI `sx={{ ... }}`の乱用を禁止します。
 - コンポーネント同伴スタイルシート（`Component.scss`）または`src/styles/pages/*.scss`を使用してください。
 - カラー、余白、シャドウ、高さは`src/styles/base/_variables.scss`および`_mixins.scss`の定義値を使用します。
+- **SCSSコードフォーマット規約（完全コンパクト記法）**:
+  - ルートセレクタの内部においては、プロパティ宣言直後、子セレクタ間、兄弟ブロック間、波括弧（`{}`）の前後を含め、**一切の不要な空行（改行）を挟まず完全に連続して記述**します。
+  - ファイル末尾の閉じ波括弧の後ろに複数の空行（余分な改行）を挿入せず、単一の改行のみで終了します。
+- **`!important` の使用厳禁**:
+  - CSS/SCSSにおいて `!important` を安易に使用することを禁止します。
+- **MUIコンポーネントの全体テーマ化原則**:
+  - 個別SCSSでの `.Mui*` クラス直接上書きを禁止し、MUIのカスタマイズは必ず `src/components/provider/MuiProvider.tsx` の `createTheme`（`components: { MuiXxx: { styleOverrides: ... } }`）で一括管理します。
+- **ページ追加時のスタイル構造化管理原則（`src/styles/pages/<route>.scss`）**:
+  - 新規ページ（ルート）を追加する際は、必ず `src/styles/pages/<route>.scss` に専用スタイルシートを作成し、ルート名と1対1で対応付けて構造化管理します。
+  - ページスタイルシートは最上位ページコンテナクラス（例: `.home-container`, `.notice-container`）で全体を完全にルートスコープします。
+
 
 ### 3.5. 共通ラッパーライブラリの遵守
+
 - **日時処理**: 生の`dayjs`を直接importせず、日本ロケール(`ja`)およびタイムゾーン(`Asia/Tokyo`)が設定された`@/common/lib/Dayjs`を必ず使用します。
 - **ユーザーフィードバック**: ブラウザネイティブの`window.alert()`を使用せず、`notistack`の`useSnackbar()`を使用します。
 - **モーダル/ダイアログ**: モバイルのブラウザバック(`popstate`)を安全に処理する`@/components/mui/MuiDialog`を使用します。
+
+### 3.6. ルールおよびドキュメントの単一真実源（Single Source of Truth）原則
+
+- **サブディレクトリへのルールファイル分散の厳禁**:
+  - `src/**/AGENTS.md` のように、サブディレクトリ内にルールファイルや指示書を乱立・分散させてはなりません。
+  - ルールが分散するとエージェントの読み落としやトークン浪費、ルールの乖離を招きます。
+- **ルート `AGENTS.md` への集約義務**:
+  - AIエージェントが遵守すべきすべての行動憲法・スタイル規約・アーキテクチャ境界は、対話開始時にシステムプロンプトとして100%自動注入される**ルートの `AGENTS.md` に一元集約**します。
+  - ユーザーからのフィードバックや教訓は即座にルート `AGENTS.md`（または `TECH.md` / `ARCHITECTURE.md`）に反映し、二度と同じミスを繰り返さない持続的な品質向上を保証します。
+
 
 ---
 

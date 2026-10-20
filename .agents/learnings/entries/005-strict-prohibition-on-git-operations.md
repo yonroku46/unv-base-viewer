@@ -1,15 +1,16 @@
-# 005. Git操作（commit / add / push）の自動実行厳禁
+---
+id: 005-strict-prohibition-on-git-operations
+title: Gitステージングおよびコミット操作のAI自律実行厳禁
+date: 2026-10-19
+scope: [git, protocol]
+status: active
+---
 
-## 日付
-2026-10-19
+### 背景・発生した問題（Problem / Context）
+エージェントが自律的に `git add` や `git commit`、`git push` を実行すると、ユーザーのコミット履歴や意図しない差分の巻き込みが発生する。
 
-## 背景・課題
-AIエージェントが作業完了時に独断で `git add` や `git commit` を実行したところ、ユーザーから「コミットやステージング作業はAIが勝手に行わず、すべてユーザー自身が管理・判断できるようにしてほしい」という明確な方針指示を受けた。
+### 根本原因（Root Cause）
+Gitのバージョン管理およびコミット単位の判断はユーザー側の排他的な権限であることの境界違反。
 
-## 解決策・学習事項
-1. **コミット・ステージングの絶対禁止**:
-   - `git add`、`git commit`、`git push`、`git reset` 等のGit状態・履歴を変更するコマンドは、ユーザーから明示的な指示がない限り**一切実行してはならない（厳禁）**。
-2. **検証コマンドのみ許可**:
-   - ビルド検証（`yarn lint`, `yarn build`, `./gradlew compileJava`, `./gradlew test`）および読み取り専用のステータス確認（`git status`）のみ実行を許可する。
-3. **コミットの委任**:
-   - 作業完了時は、変更されたファイル一覧と変更内容のサマリーを報告し、コミット作業はユーザーに委ねる。
+### 解決策および今後のルール（Rule & Solution）
+- `git add`, `git commit`, `git push`, `git reset` などのGit操作はAIが自動または独断で実行することを厳禁とする。

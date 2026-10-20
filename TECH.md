@@ -30,6 +30,13 @@
     - コード修正後、`yarn lint` および `yarn build` を実行してエラーが解消されたことを確認せずに作業完了とみなすことは禁止します。
 11. **Git操作（commit / add / push）の自動実行の厳禁**:
     - `git add`、`git commit`、`git push`、`git reset` 等のGit操作をAIエージェントが自動または独断で実行することを厳禁とします。コミットやステージングの判断と実行はすべてユーザーが行います。
+12. **`!important` の使用禁止および MUI スタイル直接上書きの禁止**:
+    - スタイルの詳細度を破壊する `!important` の使用を原則厳禁とします。
+    - 個別SCSSでの `.Mui*` クラス直接上書きを禁止し、MUIコンポーネントのカスタマイズは必ず `src/components/provider/MuiProvider.tsx` の `createTheme`（`components: { MuiXxx: { styleOverrides: ... } }`）で一元管理します。
+13. **ダイアログ（モーダル）乱用の厳禁（SEO/AEO・Route-First原則）**:
+    - 固有のURLを持たないダイアログは検索エンジン（SEO）やAI回答エンジン（AEO）にインデックスされず、URL共有もできません。お知らせ、詳細画面、主要機能フローをダイアログで済ませることを禁止し、必ず個別ページ（ルート）として設計します。ダイアログは認証や簡易確認などの即時インタラクションに限定します。
+
+
 
 ---
 
@@ -40,7 +47,7 @@
 - モジュール専用ローカルDTO: 各ファイルの上部で `export interface` として定義。
 - 固定の選択肢には、TypeScriptの `enum` ではなく文字列リテラルのユニオン型（`'USER' | 'ADMIN'`）を使用。
 
-### 2.2. CSS / SCSS 命名規則 (BEM記法)
+### 2.2. CSS / SCSS 命名規則 (BEM記法) およびフォーマット規約
 ```scss
 // src/styles/pages/sample.scss
 @use "../base/variables" as *;
@@ -49,22 +56,41 @@
 .sample-container {
   max-width: 1200px;
   margin: 0 auto;
-
   .sample-card {
     background: var(--background);
     border: 1px solid var(--gray-alpha-100);
-
     &__title {
       font-size: 1.25rem;
       color: var(--foreground);
     }
-
     &--active {
       border-color: var(--primary-color);
+    }
+    .sample-btn {
+      color: var(--foreground);
+      @include hover {
+        color: var(--primary-color);
+        background-color: var(--gray-alpha-100);
+      }
     }
   }
 }
 ```
+
+- **最上位ルートスコープの完全必須（クラス名衝突の防止）**:
+  - CSS Modulesを使用しないため、各コンポーネントやダイアログのSCSSは**単一のルートクラス（例: `.auth-dialog-paper`, `.app-header`）**の内部にすべての子セレクタをネストして定義します。
+  - ルートクラスの外側に `.dialog-header`, `.dialog-content` などのクラスをフラット（平面的）に定義することを厳禁とします。
+- **モバイルタッチ干渉防止（`@include hover` の義務化）**:
+  - スマートフォンやタブレット等のタッチ端末でのタップ時に発生するホバー残留（sticky hover）干渉を防止するため、直接の `&:hover` や `a:hover` の記述を禁止します。
+  - 必ず `@/styles/base/mixins` の `@mixin hover`（`@media (hover: hover) and (pointer: fine)`）を使用してください。
+- **ルートセレクタ内部の不要な空行完全禁止（完全コンパクト記法）**:
+  - ルートセレクタの内部では、プロパティ宣言の直後、子セレクタ間、兄弟ブロック間、波括弧（`{}`）の前後を含め、**中間に空行（改行）を一切入れずに詰めて記述**します。
+- **MUIコンポーネントのカスタマイズ**:
+  - 個別SCSSでの `.Mui*` 直接上書きを禁止し、`src/components/provider/MuiProvider.tsx` の `createTheme`（`components: { MuiXxx: { styleOverrides: ... } }`）で一括管理します。
+- **ファイル末尾の不要な空行禁止**:
+  - ファイル末尾の閉じ波括弧（`}`）の後に余分な空行を残さず、単一の改行で終了します。
+- **ページ追加時のスタイル構造化管理（`src/styles/pages/<route>.scss`）**:
+  - 新規ページ（ルート）のスタイルシートは必ず `src/styles/pages/<route>.scss` に配置し、ルートと1対1で構造化管理します。最上位ページクラスで100%ルートスコープしてください。
 
 ### 2.3. エラーハンドリング
 - API呼び出し時には空のcatch文（`catch {}`）で握りつぶさず、適切なスナックバー通知（`enqueueSnackbar`）やフォールバックUIを表示します。

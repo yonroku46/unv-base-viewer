@@ -4,7 +4,6 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem 5rem;
-
   .hero-section {
     text-align: center;
     padding: 4rem 1rem;
@@ -12,23 +11,19 @@
     border-radius: 1.5rem;
     margin-bottom: 3.5rem;
     border: 1px solid var(--gray-alpha-100);
-
     h1 {
       font-size: 2.5rem;
       font-weight: 800;
       letter-spacing: -0.025em;
       margin-bottom: 1rem;
       color: var(--foreground);
-
       span {
         color: var(--primary-color);
       }
-
       @include sp {
         font-size: 2rem;
       }
     }
-
     p {
       font-size: 1.125rem;
       color: var(--gray-alpha-600);
@@ -36,7 +31,6 @@
       margin: 0 auto 2rem;
       line-height: 1.6;
     }
-
     .cta-buttons {
       display: flex;
       gap: 1rem;
@@ -44,12 +38,10 @@
       flex-wrap: wrap;
     }
   }
-
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-
     .feature-card {
       padding: 2rem;
       border-radius: 1rem;
@@ -57,12 +49,10 @@
       background: var(--background);
       box-shadow: var(--box-shadow);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-      &:hover {
+      @include hover {
         transform: translateY(-4px);
         box-shadow: var(--card-shadow);
       }
-
       .icon-wrapper {
         width: 48px;
         height: 48px;
@@ -72,13 +62,11 @@
         @include flex-center;
         margin-bottom: 1.25rem;
       }
-
       h3 {
         font-size: 1.25rem;
         font-weight: 700;
         margin-bottom: 0.75rem;
       }
-
       p {
         font-size: 0.95rem;
         color: var(--gray-alpha-600);
