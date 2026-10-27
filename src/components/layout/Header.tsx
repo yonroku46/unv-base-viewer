@@ -2,14 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import { useSnackbar } from 'notistack';
 import { useHeaderVisibility } from '@/common/hooks/useHeaderVisibility';
 import { config } from '@/config';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { AuthService } from '@/api/service/AuthService';
 import AuthDialog from '@/components/dialog/AuthDialog';
+import Button from '@/components/ui/Button/Button';
 import './Header.scss';
 
 export default function Header() {
@@ -53,19 +52,13 @@ export default function Header() {
 
             {isAuthenticated ? (
               <div className="user-profile-badge">
-                <Avatar
-                  className="user-avatar"
-                  src={currentUser?.picture}
-                  alt={displayName}
-                  sx={{ width: 30, height: 30, fontSize: '0.85rem' }}
-                >
+                <div className="user-avatar" title={displayName}>
                   {displayName.charAt(0)}
-                </Avatar>
+                </div>
                 <span className="user-name">{displayName}</span>
                 <Button
                   variant="outlined"
-                  size="small"
-                  color="inherit"
+                  size="sm"
                   className="logout-btn"
                   onClick={handleLogout}
                 >
@@ -74,9 +67,8 @@ export default function Header() {
               </div>
             ) : (
               <Button
-                variant="contained"
-                size="small"
-                color="primary"
+                variant="primary"
+                size="sm"
                 onClick={handleOpenAuthDialog}
               >
                 ログイン

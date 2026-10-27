@@ -1,4 +1,4 @@
-import CircularProgress from '@mui/material/CircularProgress';
+import Progress from '@/components/ui/Progress/Progress';
 
 export default function Loading() {
   return (
@@ -11,7 +11,7 @@ export default function Loading() {
         width: '100%',
       }}
     >
-      <CircularProgress size={40} color="primary" />
+      <Progress size="md" />
     </div>
   );
 }

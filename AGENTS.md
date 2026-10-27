@@ -25,9 +25,9 @@
    - Next.js 15 App Router、React 19、TypeScript 5を極限まで活用し、SSR/CSR（`*Client.tsx`）境界の厳格な分離とSEO/OGPメタデータの完全性を担保します。
    - 不要な再レンダリングの排除、ハイドレーション不整合の根絶、Core Web Vitals（LCP/CLS/INP）高速化など、エンタープライズ級のフロントエンド最適化を主導します。
    - グローバル永続状態（Redux Toolkit）と局所UI状態の境界を厳格に守り、`any`のない型安全な堅牢コードベースを維持します。
-4. **🎨 プロダクトデザイナー / デザインエンジニア（UI/UX & Aesthetics）**:
-   - 個別SCSSでの場当たり的なMUI直接上書きを排し、`MuiProvider`による全社的テーマ統制とグローバルSCSSトークン（`_variables.scss`）を活用します。
-   - モバイルタッチ時のsticky hover防止（`@include hover`）、最上位ルートスコープ化、自然で洗練された日本語（敬体: です・ます）UX文言を担保します。
+4. **🎨 プロダクトデザイナー / デザインシステムエンジニア（UI/UX & Design System Specialist）**:
+   - サードパーティ製巨大UIライブラリに一切依存せず、**Dembrandt**を活用したデザインインテリジェンス（`dembrandt <url> --design-md` / `--dtcg` 等のコンソール出力）を基盤に、プロジェクト固有の高品質カスタムデザインシステム（`src/components/ui/`）およびトークン体系（`DESIGN.md`, `_variables.scss`）を主導・運用します。
+   - モバイルタッチ時のsticky hover防止（`@include hover`）、最上位ルートスコープ化、自然で洗練された日本語（敬体: です・ます）UX文言、およびダーク/ライトモードの完全な整合性を自律的に担保します。
 5. **🛡️ 厳格なQAエンジニア（Verification & Zero Regression）**:
    - 過去の失敗や教訓（[`.agents/learnings/`](.agents/learnings/)）を事前にチェックし、同じミスを二度と繰り返しません。
    - コード修正後は、**必ず `yarn lint` および `yarn build` を自ら実行・検証**し、警告・エラーのない完全な状態でのみ完了を宣言します。
@@ -75,7 +75,7 @@
     - ダイアログの使用は、認証（ログイン/会員登録）や確認アラート（Confirm）など、ごく限定的な即時インタラクションのみに留めます。
 - **チーム開発と長期保守性のベストプラクティス（Maintainability First）**:
   - コードは属人化や一時的な場当たり的ハックを排し、単一責任原則（SRP）、関心の分離、厳格な型安全性、一貫したディレクトリ配置を遵守したチーム開発のベストプラクティスで記述します。
-- **技術スタック**: Next.js 15+ (App Router), React 19, TypeScript 5, SCSS (`sass`), MUI v6, Redux Toolkit。
+- **技術スタック**: Next.js 15+ (App Router), React 19, TypeScript 5, SCSS (`sass`), 独自デザインシステム（Dembrandtデザインインテリジェンス基盤）, Redux Toolkit。
 - **バックエンド通信**: Spring Boot / REST API（中央Axiosシングルトンインスタンス経由）。
 - **Git操作の厳格な禁止（Strict Prohibition on Git Operations）**:
   - `git add`、`git commit`、`git push`、`git reset` などのGitステージングおよびコミット操作は、**AIエージェントが自動または独断で実行することを厳禁とします**。
@@ -104,8 +104,15 @@
 - すべてのAPIリクエストは、中央シングルトン`@/api` (`ApiInstance`)および`@/api/service/*Service.ts`を経由します。
 - バックエンドのルート定数は`src/api/module/ApiRoutes.ts`に一元管理します。
 
-### 3.4. スタイリングおよびデザインシステム規約
+### 3.4. スタイリングおよび独自デザインシステム規約（Design System & Styling Boundaries）
 
+- **外部UIライブラリの完全排除（Strict Prohibition on Monolithic UI Libraries）**:
+  - 外部のUIコンポーネントライブラリやサードパーティ製UIキットの使用を全面的に禁止します。
+  - プロジェクトのすべてのUIコンポーネントは、プロジェクト固有のデザインシステム（`src/components/ui/*`）として軽量かつアクセシブルに自前実装します。
+- **Dembrandt基盤のデザインシステム・トークン運用原則（Dembrandt-Driven Token Management）**:
+  - プロジェクトのデザインシステムは、**Dembrandt**（`dembrandt <url> --design-md` / `--dtcg`）を実行して得られたコンソール結果および `DESIGN.md` を単一真実源（SSOT）としてプロジェクト単位で管理します。
+  - カラーパレット（primary, secondary, background, foreground, surface, borders, gray scale, status variants）、タイポグラフィスケール、スペーシング、角丸、シャドウなどの抽出トークンを `src/styles/base/_variables.scss` のCSSカスタムプロパティへ展開します。
+  - UIコンポーネントはすべて `src/styles/base/_variables.scss` のCSS変数を参照し、直接のカラーハードコードを厳禁とします。
 - **CSS Modules(`.module.scss`)およびTailwind CSSの使用は禁止します。**
 - **最上位ルートスコープの必須化（クラス名衝突の防止）**:
   - コンポーネントやダイアログのSCSSは、必ず単一のルートクラス（例: `.auth-dialog-paper`, `.app-header`, `.home-container`）の内部にすべての下位要素をネストして記述します。
@@ -113,7 +120,7 @@
 - **モバイルタッチ干渉防止（`@include hover` の義務化）**:
   - モバイル端末タップ時のホバー残留（sticky hover）干渉を防止するため、直接の `&:hover` や `a:hover` 記述を禁止します。
   - 必ず `@/styles/base/mixins` の `@mixin hover`（`@media (hover: hover) and (pointer: fine)`）を使用してください。
-- JSX内でのインラインスタイル（`style={{ ... }}`）およびMUI `sx={{ ... }}`の乱用を禁止します。
+- JSX内でのインラインスタイル（`style={{ ... }}`）の記述を禁止します。
 - コンポーネント同伴スタイルシート（`Component.scss`）または`src/styles/pages/*.scss`を使用してください。
 - カラー、余白、シャドウ、高さは`src/styles/base/_variables.scss`および`_mixins.scss`の定義値を使用します。
 - **SCSSコードフォーマット規約（完全コンパクト記法）**:
@@ -121,18 +128,15 @@
   - ファイル末尾の閉じ波括弧の後ろに複数の空行（余分な改行）を挿入せず、単一の改行のみで終了します。
 - **`!important` の使用厳禁**:
   - CSS/SCSSにおいて `!important` を安易に使用することを禁止します。
-- **MUIコンポーネントの全体テーマ化原則**:
-  - 個別SCSSでの `.Mui*` クラス直接上書きを禁止し、MUIのカスタマイズは必ず `src/components/provider/MuiProvider.tsx` の `createTheme`（`components: { MuiXxx: { styleOverrides: ... } }`）で一括管理します。
 - **ページ追加時のスタイル構造化管理原則（`src/styles/pages/<route>.scss`）**:
   - 新規ページ（ルート）を追加する際は、必ず `src/styles/pages/<route>.scss` に専用スタイルシートを作成し、ルート名と1対1で対応付けて構造化管理します。
   - ページスタイルシートは最上位ページコンテナクラス（例: `.home-container`, `.notice-container`）で全体を完全にルートスコープします。
 
-
-### 3.5. 共通ラッパーライブラリの遵守
+### 3.5. 共通ラッパーライブラリおよび独自UIの遵守
 
 - **日時処理**: 生の`dayjs`を直接importせず、日本ロケール(`ja`)およびタイムゾーン(`Asia/Tokyo`)が設定された`@/common/lib/Dayjs`を必ず使用します。
 - **ユーザーフィードバック**: ブラウザネイティブの`window.alert()`を使用せず、`notistack`の`useSnackbar()`を使用します。
-- **モーダル/ダイアログ**: モバイルのブラウザバック(`popstate`)を安全に処理する`@/components/mui/MuiDialog`を使用します。
+- **モーダル/ダイアログ**: モバイルのブラウザバック(`popstate`)を安全に処理するプロジェクト独自デザインシステムのダイアログ`@/components/ui/Dialog`を使用します。（外部UIライブラリのダイアログは使用禁止）
 
 ### 3.6. ルールおよびドキュメントの単一真実源（Single Source of Truth）原則
 

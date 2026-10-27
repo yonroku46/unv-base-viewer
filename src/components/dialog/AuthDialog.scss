@@ -2,61 +2,59 @@
 @use '@/styles/base/mixins' as *;
 
 .auth-dialog-paper {
-  border-radius: 12px;
-  padding: 1.5rem;
-  position: relative;
-  box-shadow: var(--card-shadow);
-  background-color: var(--background);
-  .auth-dialog-header {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 0.5rem;
-    .auth-dialog-close-btn {
-      color: var(--gray-alpha-600);
-      padding: 4px;
-      @include hover {
-        color: var(--foreground);
-        background-color: var(--gray-alpha-100);
-      }
-    }
-  }
-  .auth-dialog-content {
+  .auth-dialog-body {
+    padding: var(--space-6);
     .auth-tabs {
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--gray-alpha-200);
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: var(--space-5);
+      .auth-tab {
+        flex: 1;
+        padding: var(--space-3) var(--space-4);
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--text-secondary);
+        font-size: var(--font-base);
+        font-weight: 500;
+        cursor: pointer;
+        transition: color var(--transition-fast), border-color var(--transition-fast);
+        @include hover {
+          color: var(--primary-color);
+        }
+        &--active {
+          color: var(--primary-color);
+          border-bottom-color: var(--primary-color);
+          font-weight: 600;
+        }
+      }
     }
     .auth-form {
       display: flex;
       flex-direction: column;
-      gap: 1.1rem;
+      gap: var(--space-4);
       .auth-submit-btn {
-        margin-top: 0.5rem;
-        padding: 0.65rem;
-        font-size: 0.95rem;
-        font-weight: 600;
-        text-transform: none;
-        border-radius: 8px;
-        box-shadow: none;
-        @include hover {
-          box-shadow: var(--box-shadow);
-        }
+        margin-top: var(--space-2);
       }
     }
-    .auth-divider-wrap {
-      margin: 1.25rem 0;
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      margin: var(--space-5) 0;
+      color: var(--text-muted);
+      font-size: var(--font-xs);
+      &::before,
+      &::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--border);
+      }
+      span {
+        padding: 0 var(--space-3);
+      }
     }
     .google-auth-btn {
-      border-color: var(--gray-alpha-300);
-      color: var(--foreground);
-      text-transform: none;
       font-weight: 500;
-      font-size: 0.9rem;
-      padding: 0.6rem;
-      border-radius: 8px;
-      @include hover {
-        border-color: var(--gray-alpha-500);
-        background-color: var(--gray-alpha-50);
-      }
     }
   }
 }

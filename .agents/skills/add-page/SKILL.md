@@ -34,7 +34,7 @@ export default async function NoticePage() {
 'use client';
 
 import { useSnackbar } from 'notistack';
-import Button from '@mui/material/Button';
+import Button from '@/components/ui/Button/Button';
 import '@/styles/pages/notice.scss';
 
 export default function NoticeClient() {
@@ -52,7 +52,7 @@ export default function NoticeClient() {
         <p>重要なお知らせとアップデート</p>
       </div>
       <div className="notice-content">
-        <Button variant="contained" color="primary" onClick={handleAction}>
+        <Button variant="primary" onClick={handleAction}>
           再読み込み
         </Button>
       </div>

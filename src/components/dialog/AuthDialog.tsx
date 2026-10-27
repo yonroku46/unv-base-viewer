@@ -1,16 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import { useSnackbar } from 'notistack';
-import MuiDialog from '@/components/mui/MuiDialog';
+import { Dialog, Button, Input } from '@/components/ui';
 import { AuthService } from '@/api/service/AuthService';
 import { useAppDispatch } from '@/store';
 import './AuthDialog.scss';
@@ -38,10 +30,6 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
   const [signupEmail, setSignupEmail] = useState<string>('');
   const [signupPassword, setSignupPassword] = useState<string>('');
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setCurrentTab(newValue);
-  };
-
   const resetForm = () => {
     setLoginEmail('');
     setLoginPassword('');
@@ -51,14 +39,10 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
   };
 
   const handleDialogClose = () => {
-    if (loading) return;
     resetForm();
     onClose();
   };
 
-  /**
-   * メール・パスワードログイン処理
-   */
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginEmail || !loginPassword) {
@@ -72,21 +56,18 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
         email: loginEmail,
         password: loginPassword,
       });
-      enqueueSnackbar('ログインに成功しました。', { variant: 'success' });
+      enqueueSnackbar('ログインしました。', { variant: 'success' });
       handleDialogClose();
     } catch (error: any) {
       const message =
         error?.response?.data?.information?.[0]?.message ||
-        'ログインに失敗しました。メールアドレスまたはパスワードを確認してください。';
+        'ログインに失敗しました。メールアドレスまたはパスワードをご確認ください。';
       enqueueSnackbar(message, { variant: 'error' });
     } finally {
       setLoading(false);
     }
   };
 
-  /**
-   * 新規会員登録処理
-   */
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!signupName || !signupEmail || !signupPassword) {
@@ -94,32 +75,33 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
       return;
     }
 
+    if (signupPassword.length < 6) {
+      enqueueSnackbar('パスワードは6文字以上で入力してください。', { variant: 'warning' });
+      return;
+    }
+
     setLoading(true);
     try {
       await authService.signup({
-        userName: signupName,
+        name: signupName,
         email: signupEmail,
         password: signupPassword,
       });
-      enqueueSnackbar('会員登録が完了しました。', { variant: 'success' });
+      enqueueSnackbar('アカウント登録が完了しました。', { variant: 'success' });
       handleDialogClose();
     } catch (error: any) {
       const message =
         error?.response?.data?.information?.[0]?.message ||
-        '会員登録に失敗しました。入力内容を確認してください。';
+        '新規登録に失敗しました。既に使用されているメールアドレスの可能性があります。';
       enqueueSnackbar(message, { variant: 'error' });
     } finally {
       setLoading(false);
     }
   };
 
-  /**
-   * Googleログイン処理
-   */
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      // GoogleログインAPI呼び出し（バックエンドのGoogleログイン連携）
       await authService.googleLogin({
         email: 'google-user@univus.com',
         name: 'Google ユーザー',
@@ -137,106 +119,95 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
   };
 
   return (
-    <MuiDialog
+    <Dialog
       open={open}
       onClose={handleDialogClose}
-      maxWidth="xs"
-      fullWidth
-      PaperProps={{ className: 'auth-dialog-paper' }}
+      maxWidth="sm"
+      className="auth-dialog-paper"
+      showCloseButton={true}
     >
-      <div className="auth-dialog-header">
-        <IconButton
-          aria-label="close"
-          onClick={handleDialogClose}
-          className="auth-dialog-close-btn"
-          size="small"
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </div>
-
-      <div className="auth-dialog-content">
-        <Tabs
-          value={currentTab}
-          onChange={handleTabChange}
-          variant="fullWidth"
-          className="auth-tabs"
-        >
-          <Tab label="ログイン" />
-          <Tab label="新規登録" />
-        </Tabs>
+      <div className="auth-dialog-body">
+        <div className="auth-tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={currentTab === 0}
+            className={`auth-tab ${currentTab === 0 ? 'auth-tab--active' : ''}`}
+            onClick={() => setCurrentTab(0)}
+          >
+            ログイン
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={currentTab === 1}
+            className={`auth-tab ${currentTab === 1 ? 'auth-tab--active' : ''}`}
+            onClick={() => setCurrentTab(1)}
+          >
+            新規登録
+          </button>
+        </div>
 
         {currentTab === 0 && (
           <form onSubmit={handleLoginSubmit} className="auth-form">
-            <TextField
+            <Input
               label="メールアドレス"
               type="email"
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
-              fullWidth
-              size="small"
               required
               autoComplete="email"
               disabled={loading}
               placeholder="example@domain.com"
             />
-            <TextField
+            <Input
               label="パスワード"
               type="password"
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
-              fullWidth
-              size="small"
               required
               autoComplete="current-password"
               disabled={loading}
             />
             <Button
               type="submit"
-              variant="contained"
-              color="primary"
+              variant="primary"
               fullWidth
-              size="medium"
-              disabled={loading}
+              size="md"
+              loading={loading}
               className="auth-submit-btn"
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'ログイン'}
+              ログイン
             </Button>
           </form>
         )}
 
         {currentTab === 1 && (
           <form onSubmit={handleSignupSubmit} className="auth-form">
-            <TextField
+            <Input
               label="お名前"
               value={signupName}
               onChange={(e) => setSignupName(e.target.value)}
-              fullWidth
-              size="small"
               required
               autoComplete="name"
               disabled={loading}
               placeholder="山田 太郎"
             />
-            <TextField
+            <Input
               label="メールアドレス"
               type="email"
               value={signupEmail}
               onChange={(e) => setSignupEmail(e.target.value)}
-              fullWidth
-              size="small"
               required
               autoComplete="email"
               disabled={loading}
               placeholder="example@domain.com"
             />
-            <TextField
+            <Input
               label="パスワード"
               type="password"
               value={signupPassword}
               onChange={(e) => setSignupPassword(e.target.value)}
-              fullWidth
-              size="small"
               required
               autoComplete="new-password"
               disabled={loading}
@@ -244,30 +215,30 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
             />
             <Button
               type="submit"
-              variant="contained"
-              color="primary"
+              variant="primary"
               fullWidth
-              size="medium"
-              disabled={loading}
+              size="md"
+              loading={loading}
               className="auth-submit-btn"
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'アカウント登録'}
+              アカウント登録
             </Button>
           </form>
         )}
 
-        <div className="auth-divider-wrap">
-          <Divider>または</Divider>
+        <div className="auth-divider">
+          <span>または</span>
         </div>
 
         <Button
           variant="outlined"
           fullWidth
+          size="md"
           onClick={handleGoogleLogin}
           disabled={loading}
           className="google-auth-btn"
           startIcon={
-            <svg width="18" height="18" viewBox="0 0 24 24">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -290,6 +261,6 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
           Googleでログイン
         </Button>
       </div>
-    </MuiDialog>
+    </Dialog>
   );
 }

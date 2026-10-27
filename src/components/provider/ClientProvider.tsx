@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import Loading from '@/app/loading';
-import { ThemeProvider } from '@/components/provider/MuiProvider';
+import { ThemeProvider } from '@/components/provider/ThemeProvider';
 import { HeaderVisibilityProvider } from '@/common/hooks/useHeaderVisibility';
 
 const ReduxProvider = dynamic(() => import('@/store/ReduxProvider'), { ssr: false });

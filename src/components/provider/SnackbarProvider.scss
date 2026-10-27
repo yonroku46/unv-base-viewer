@@ -1,0 +1,37 @@
+@use "@/styles/base/variables" as *;
+@use "@/styles/base/mixins" as *;
+
+.ui-snackbar-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  color: #ffffff;
+  cursor: pointer;
+  max-width: 420px;
+  &--success {
+    background-color: var(--variant-success);
+  }
+  &--error {
+    background-color: var(--variant-error);
+  }
+  &--warning {
+    background-color: var(--variant-warning);
+  }
+  &--info,
+  &--default {
+    background-color: var(--primary-color);
+  }
+  .ui-snackbar-icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .ui-snackbar-message {
+    flex: 1;
+  }
+}

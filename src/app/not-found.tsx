@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Button from '@mui/material/Button';
+import Button from '@/components/ui/Button/Button';
 
 export default function NotFound() {
   return (
@@ -20,7 +20,7 @@ export default function NotFound() {
         ページが見つかりませんでした。
       </p>
       <Link href="/">
-        <Button variant="contained" color="primary">
+        <Button variant="primary">
           ホームへ戻る
         </Button>
       </Link>

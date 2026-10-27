@@ -1,0 +1,60 @@
+@use "@/styles/base/variables" as *;
+@use "@/styles/base/mixins" as *;
+
+.ui-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  font-family: var(--font-family-base);
+  .ui-input-label {
+    font-size: var(--font-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .ui-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    .ui-input-field {
+      width: 100%;
+      height: 40px;
+      padding: 0 var(--space-3);
+      font-size: var(--font-base);
+      color: var(--text-primary);
+      background-color: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      &::placeholder {
+        color: var(--text-muted);
+      }
+      &:focus {
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 2px var(--primary-color-bg);
+      }
+      &:disabled {
+        background-color: var(--surface);
+        color: var(--text-disabled);
+        cursor: not-allowed;
+      }
+    }
+  }
+  .ui-input-helper {
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+  }
+  &--error {
+    .ui-input-container .ui-input-field {
+      border-color: var(--variant-error);
+      &:focus {
+        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
+      }
+    }
+    .ui-input-helper {
+      color: var(--variant-error);
+    }
+  }
+}

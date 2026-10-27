@@ -13,5 +13,5 @@ Tailwind CSSやCSS Modules、JSXインラインスタイル（style={{ ... }}）
 スタイル定義の記述箇所が分散し、デザインシステムトークンの統一利用が困難になる。
 
 ### 解決策および今後のルール（Rule & Solution）
-- CSS Modules、Tailwind CSS、インラインスタイル、MUI sxプロパティの乱用を禁止する。
-- スタイルはコンポーネント同伴SCSSまたは `src/styles/pages/*.scss` に記述し、`_variables.scss` のトークンを使用する。
+- CSS Modules、Tailwind CSS、JSXインラインスタイルの記述を禁止する。
+- スタイルはコンポーネント同伴SCSSまたは `src/styles/pages/*.scss` に記述し、`DESIGN.md` および `_variables.scss` のトークンを使用する。

@@ -17,9 +17,9 @@
 4. **生 `dayjs` の直接インポート禁止**:
    - `import dayjs from 'dayjs'` を直接呼び出さず、日本標準時（`Asia/Tokyo`）および日本語ロケール（`ja`）が設定された `@/common/lib/Dayjs` を使用します。
 5. **ブラウザ標準の `alert()` / `confirm()` の禁止**:
-   - ユーザーへのフィードバックには、`notistack` の `useSnackbar()` または `@/components/mui/MuiDialog` を使用します。
-6. **インラインスタイルおよび MUI `sx` の乱用禁止**:
-   - JSX内での `style={{ ... }}` および MUI `sx={{ ... }}` の乱用を禁止します。グローバルトークン（`var(--primary-color)` 等）を参照するSCSSクラスを定義してください。
+   - ユーザーへのフィードバックには、`notistack` の `useSnackbar()` または独自デザインシステムの `@/components/ui/Dialog` を使用します。
+6. **インラインスタイルの禁止およびデザインシステムトークン参照の徹底**:
+   - JSX内での `style={{ ... }}` の記述を禁止します。`DESIGN.md` および `_variables.scss` で定義されたトークン（`var(--primary-color)` 等）を参照するSCSSクラスを定義してください。
 7. **外部パッケージの無断追加禁止**:
    - ユーザーの明示的な許可なしに、Zustand、SWR、React Query、Tailwind、Lodashなどのサードパーティ製ライブラリを勝手にインストールしてはなりません。
 8. **不要な Redux Slice 追加の禁止**:
@@ -30,9 +30,9 @@
     - コード修正後、`yarn lint` および `yarn build` を実行してエラーが解消されたことを確認せずに作業完了とみなすことは禁止します。
 11. **Git操作（commit / add / push）の自動実行の厳禁**:
     - `git add`、`git commit`、`git push`、`git reset` 等のGit操作をAIエージェントが自動または独断で実行することを厳禁とします。コミットやステージングの判断と実行はすべてユーザーが行います。
-12. **`!important` の使用禁止および MUI スタイル直接上書きの禁止**:
+12. **`!important` の使用禁止およびサードパーティ製UIライブラリの完全排除**:
     - スタイルの詳細度を破壊する `!important` の使用を原則厳禁とします。
-    - 個別SCSSでの `.Mui*` クラス直接上書きを禁止し、MUIコンポーネントのカスタマイズは必ず `src/components/provider/MuiProvider.tsx` の `createTheme`（`components: { MuiXxx: { styleOverrides: ... } }`）で一元管理します。
+    - 外部UIライブラリの依存・使用を全面的に排除し、Dembrandtから抽出されたトークン（`DESIGN.md`）に基づく独自デザインシステムコンポーネント（`src/components/ui/*`）で構築します。
 13. **ダイアログ（モーダル）乱用の厳禁（SEO/AEO・Route-First原則）**:
     - 固有のURLを持たないダイアログは検索エンジン（SEO）やAI回答エンジン（AEO）にインデックスされず、URL共有もできません。お知らせ、詳細画面、主要機能フローをダイアログで済ませることを禁止し、必ず個別ページ（ルート）として設計します。ダイアログは認証や簡易確認などの即時インタラクションに限定します。
 
@@ -85,8 +85,9 @@
   - 必ず `@/styles/base/mixins` の `@mixin hover`（`@media (hover: hover) and (pointer: fine)`）を使用してください。
 - **ルートセレクタ内部の不要な空行完全禁止（完全コンパクト記法）**:
   - ルートセレクタの内部では、プロパティ宣言の直後、子セレクタ間、兄弟ブロック間、波括弧（`{}`）の前後を含め、**中間に空行（改行）を一切入れずに詰めて記述**します。
-- **MUIコンポーネントのカスタマイズ**:
-  - 個別SCSSでの `.Mui*` 直接上書きを禁止し、`src/components/provider/MuiProvider.tsx` の `createTheme`（`components: { MuiXxx: { styleOverrides: ... } }`）で一括管理します。
+- **Dembrandt基盤のデザインシステム・トークン運用**:
+  - デザイン定義はDembrandtのコンソール出力（`DESIGN.md`）を単一真実源（SSOT）とし、`src/styles/base/_variables.scss` のCSS変数を通じて全コンポーネントへ展開します。
+  - 共通UIコンポーネントは `src/components/ui/<Component>/` 配下に自己完結型（同伴SCSS）で実装し、外部UIライブラリに一切依存しない軽量・堅牢な設計を維持します。
 - **ファイル末尾の不要な空行禁止**:
   - ファイル末尾の閉じ波括弧（`}`）の後に余分な空行を残さず、単一の改行で終了します。
 - **ページ追加時のスタイル構造化管理（`src/styles/pages/<route>.scss`）**:
