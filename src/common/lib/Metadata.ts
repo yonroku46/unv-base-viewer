@@ -18,7 +18,7 @@ export function generatePageMetadata(
       description: metaDesc,
       url: config.baseUrl,
       siteName: config.service.name,
-      locale: 'ja_JP',
+      locale: 'ko_KR',
       type: 'website',
     },
     twitter: {

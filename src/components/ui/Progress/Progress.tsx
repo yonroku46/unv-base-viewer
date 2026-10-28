@@ -10,7 +10,7 @@ export function Progress({ size = 'md', className = '' }: ProgressProps) {
   return (
     <div
       role="progressbar"
-      aria-label="読み込み中"
+      aria-label="로딩 중"
       className={`ui-progress ui-progress--${size} ${className}`.trim()}
     />
   );

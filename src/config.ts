@@ -8,7 +8,7 @@ const buildConfig = () => {
   const apiRoot = process.env.NEXT_PUBLIC_API_ROOT || "/api";
 
   return {
-    defaultLanguage: "ja",
+    defaultLanguage: "ko",
     baseUrl,
     apiRoot,
     service: {

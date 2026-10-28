@@ -1,17 +1,17 @@
 ---
 id: 008-external-ui-prohibition-and-important-ban
-title: 外部UIライブラリの完全排除および!important使用厳禁
+title: 외부 UI 라이브러리 완전 배제 및 !important 사용 엄금
 date: 2026-10-20
 scope: [design-system, styling, scss]
 status: active
 ---
 
-### 背景・発生した問題（Problem / Context）
-外部の巨大UIライブラリを導入した結果、バンドルサイズの肥大化、スタイルの詳細度衝突、および個別SCSSで強引に `!important` を付与して上書きするアンチパターンが発生した。
+### 배경 및 발생 문제 (Problem / Context)
+외부 거대 UI 라이브러리를 도입한 결과, 번들 크기 비대화, 스타일 우선순위(Specificity) 충돌, 개별 SCSS에서 무리하게 `!important`를 부여하여 덮어쓰는 안티패턴이 발생함.
 
-### 根本原因（Root Cause）
-外部UIライブラリが独自のスタイル機構や詳細度を持つため、CSS変数による自由なトークン管理やダークモードの制御が著しく困難になる。
+### 근본 원인 (Root Cause)
+외부 UI 라이브러리가 고유의 스타일 메커니즘과 상세도를 가지고 있어, CSS 변수를 통한 자유로운 토큰 관리나 다크 모드 제어가 극히 어려워짐.
 
-### 解決策および今後のルール（Rule & Solution）
-- `!important` の安易な使用を全面的に禁止する。
-- 外部UIコンポーネントライブラリを完全排除し、すべてのコンポーネントはDembrandtのトークン（`DESIGN.md`）に基づく独自UI（`src/components/ui/*`）で自前実装する。
+### 해결책 및 향후 규칙 (Rule & Solution)
+- `!important`의 안이한 사용을 전면 금지한다.
+- 외부 UI 컴포넌트 라이브러리를 완전히 배제하고, 모든 컴포넌트는 Dembrandt의 토큰(`DESIGN.md`)에 기반한 자체 UI(`src/components/ui/*`)로 직접 구현한다.

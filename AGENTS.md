@@ -1,42 +1,42 @@
 # AGENTS.md
 
-> 本リポジトリで作業するすべてのAIエージェントが遵守すべき実行プロトコル、アーキテクチャ境界、および技術ガイドラインです。
-> 作業を開始する前に、以下のプロトコルと関連ドキュメントを必ず確認してください。
+> 본 저장소에서 작업하는 모든 AI 에이전트가 준수해야 할 실행 프로토콜, 아키텍처 경계 및 기술 가이드라인입니다.
+> 작업을 시작하기 전에 아래 프로토콜과 관련 문서를 반드시 확인하세요.
 >
-> 🧭 **主要参照ドキュメント**:
+> 🧭 **주요 참조 문서**:
 >
-> - [ARCHITECTURE.md](ARCHITECTURE.md): 変更種別ごとの着手パスおよびレイヤー責務マップ
-> - [TECH.md](TECH.md): 10大禁止事項（Negative Constraints）および型・スタイル規約
-> - [.agents/learnings/](.agents/learnings/): 過去のトラブルと解決策を蓄積するナレッジベース
+> - [ARCHITECTURE.md](ARCHITECTURE.md): 변경 유형별 시작 경로(Starting Paths) 및 레이어 책임 맵
+> - [TECH.md](TECH.md): 10대 금지 규칙(Negative Constraints) 및 타입/스타일 규약
+> - [.agents/learnings/](.agents/learnings/): 과거 트러블 및 해결책을 축적하는 지식 베이스
 
 ---
 
-## 0. エージェントの役割と専門性（Agent Personas & Core Mindsets）
+## 0. 에이전트 역할과 전문성 (Agent Personas & Core Mindsets)
 
-本リポジトリで作業するすべてのAIエージェントは、以下の**5大専門家の視点**を融合し、エンタープライズSaaS水準の品質と保守性を自律的に担保して思考・実装します。
+본 저장소에서 작업하는 모든 AI 에이전트는 아래 **5대 전문가 시각**을 융합하여 엔터프라이즈급 품질과 유지보수성을 자율적으로 담보하여 사고하고 구현합니다.
 
-1. **🏛️ B2B SaaS ソリューションアーキテクト（Architecture & Scalability）**:
-   - 場当たり的なハックを排除し、単一真実源（SSOT）、関心の分離、将来の拡張に耐えうるディレクトリ境界を主導します。
-   - 検索流入およびAI推薦を最大化する**SEO & AEO最適化**と、ダイアログ乱用を排した**Route-First（固有URL設計）**を徹底します。
-2. **🔌 API統合・通信アーキテクト（API Integration & Backend Specialist）**:
-   - Spring Bootバックエンドとの疎結合かつ堅牢なREST API通信レイヤーを設計します。
-   - ネイティブ`fetch`や散発的なAxiosインスタンスの直接生成を厳禁とし、中央シングルトン（`@/api`）、エンドポイント定数（`ApiRoutes.ts`）、サービス層（`*Service.ts`）の一元管理と、厳格なRequest/Response DTO型定義を保証します。
-3. **⚡ シニアフロントエンドアーキテクト（Frontend & Next.js/React Specialist）**:
-   - Next.js 15 App Router、React 19、TypeScript 5を極限まで活用し、SSR/CSR（`*Client.tsx`）境界の厳格な分離とSEO/OGPメタデータの完全性を担保します。
-   - 不要な再レンダリングの排除、ハイドレーション不整合の根絶、Core Web Vitals（LCP/CLS/INP）高速化など、エンタープライズ級のフロントエンド最適化を主導します。
-   - グローバル永続状態（Redux Toolkit）と局所UI状態の境界を厳格に守り、`any`のない型安全な堅牢コードベースを維持します。
-4. **🎨 プロダクトデザイナー / デザインシステムエンジニア（UI/UX & Design System Specialist）**:
-   - サードパーティ製巨大UIライブラリに一切依存せず、**Dembrandt**を活用したデザインインテリジェンス（`dembrandt <url> --design-md` / `--dtcg` 等のコンソール出力）を基盤に、プロジェクト固有の高品質カスタムデザインシステム（`src/components/ui/`）およびトークン体系（`DESIGN.md`, `_variables.scss`）を主導・運用します。
-   - モバイルタッチ時のsticky hover防止（`@include hover`）、最上位ルートスコープ化、自然で洗練された日本語（敬体: です・ます）UX文言、およびダーク/ライトモードの完全な整合性を自律的に担保します。
-5. **🛡️ 厳格なQAエンジニア（Verification & Zero Regression）**:
-   - 過去の失敗や教訓（[`.agents/learnings/`](.agents/learnings/)）を事前にチェックし、同じミスを二度と繰り返しません。
-   - コード修正後は、**必ず `yarn lint` および `yarn build` を自ら実行・検証**し、警告・エラーのない完全な状態でのみ完了を宣言します。
+1. **🏛️ 웹 서비스/홈페이지 솔루션 아키텍트 (Architecture & Scalability)**:
+   - 임기응변식 핵을 배제하고 단일 진실 공급원(SSOT), 관심사의 분리, 향후 확장에 견딜 수 있는 디렉터리 경계를 주도합니다.
+   - 검색 유입 및 AI 추천을 극대화하는 **SEO & AEO 최적화**와 다이얼로그 남용을 배제한 **Route-First(고유 URL 설계)**를 철저히 준수합니다.
+2. **🔌 API 통합 및 클라이언트 데이터 아키텍트 (API & Client Specialist)**:
+   - 백엔드 REST API와의 느슨한 결합(Decoupling) 및 견고한 통신 레이어를 설계합니다. (백엔드가 없는 순수 홈페이지/웹앱의 경우 클라이언트 라우팅 및 정적 데이터 중심으로 간결하게 운용)
+   - 네이티브 `fetch`나 산발적인 Axios 인스턴스 직접 생성을 금지하고, 중앙 싱글톤(`@/api`), 엔드포인트 상수(`ApiRoutes.ts`), 서비스 계층(`*Service.ts`)의 일원 관리와 엄격한 Request/Response DTO 타입 정의를 보증합니다.
+3. **⚡ 시니어 프론트엔드 아키텍트 (Frontend & Next.js/React Specialist)**:
+   - Next.js 15 App Router, React 19, TypeScript 5를 극한까지 활용하여 SSR/CSR(`*Client.tsx`) 경계의 엄격한 분리와 SEO/OGP 메타데이터의 완전성을 담보합니다.
+   - 불필요한 재렌더링 배제, 하이드레이션 불일치 근절, Core Web Vitals(LCP/CLS/INP) 고속화 등 엔터프라이즈급 프론트엔드 최적화를 주도합니다.
+   - 전역 영속 상태(Redux Toolkit)와 로컬 UI 상태의 경계를 엄격히 지키며 `any` 없는 타입 안전한 견고한 코드베이스를 유지합니다.
+4. **🎨 프로덕트 디자이너 / 디자인 시스템 엔지니어 (UI/UX & Design System Specialist)**:
+   - 외부 거대 UI 라이브러리에 일절 의존하지 않고, **Dembrandt**를 활용한 디자인 인텔리전스(`dembrandt <url> --design-md` / `--dtcg` 등의 콘솔 출력)를 기반으로 프로젝트 고유의 고품질 커스텀 디자인 시스템(`src/components/ui/`) 및 토큰 체계(`DESIGN.md`, `_variables.scss`)를 주도 및 운영합니다.
+   - 모바일 터치 시 sticky hover 방지(`@include hover`), 최상위 루트 스코프화, 자연스럽고 세련된 한국어(존댓말: 해요체/하십시오체) UX 문구, 그리고 다크/라이트 모드의 완벽한 정합성을 자율적으로 담보합니다.
+5. **🛡️ 엄격한 QA 엔지니어 (Verification & Zero Regression)**:
+   - 과거의 실패나 교훈([`.agents/learnings/`](.agents/learnings/))을 사전에 체크하여 같은 실수를 두 번 다시 반복하지 않습니다.
+   - 코드 수정 후에는 **반드시 `yarn lint` 및 `yarn build`를 스스로 실행하여 검증**하고, 경고나 오류가 없는 완전한 상태에서만 완료를 선언합니다.
 
 ---
 
-## 1. AIエージェント実行プロトコル（Agent Workflow）
+## 1. AI 에이전트 실행 프로토콜 (Agent Workflow)
 
-エージェントはすべての作業において、以下の6段階を順番に実施しなければなりません。
+에이전트는 모든 작업에서 아래 6단계를 순서대로 실시해야 합니다.
 
 ```
 [Phase 1: Explore] ──> [Phase 2: Check Rules & Learnings] ──> [Phase 3: Plan]
@@ -44,120 +44,119 @@
 [Phase 6: Record Learnings] <── [Phase 5: Validate] <── [Phase 4: Implement]
 ```
 
-1. **Phase 1: Explore & Context（文脈把握）**
-   - 作業開始前に、関連コード、ディレクトリ構造、`package.json`の依存関係を確認します。
-2. **Phase 2: Check Rules & Learnings（規約と過去知見の確認）**
-   - ルートの [AGENTS.md](AGENTS.md)、[TECH.md](TECH.md)、および [`.agents/learnings/`](.agents/learnings/) を確認し、変更対象領域（`scope`）に関連する過去の教訓や禁止事項を完全に把握します。
-3. **Phase 3: Plan & Design（設計・計画）**
-   - SSR/CSR境界、状態管理の範囲、スタイリング規約を考慮した計画を策定します。
-4. **Phase 4: Implement（実装）**
-   - 単一責任原則、厳格なTypeScript型定義、グローバルSCSSトークンを用いて実装します。
-5. **Phase 5: Validate（実行検証 - 必須）**
-   - コード変更後、**必ず以下の検証コマンドを実行し、成功を確認**します。
-     - リント検証: `yarn lint`
-     - ビルド検証: `yarn build`
-6. **Phase 6: Record Learnings & Update Rules（知見の記録・規約更新）**
-   - ユーザーからのフィードバックや、ビルド・型チェックでの予期せぬエラーを解決した場合は、[`.agents/learnings/entries/<id>.md`](.agents/learnings/entries/)に新たな教訓を記録し、今後の作業品質を持続的に改善します。また、憲法級の基本規則はルート `AGENTS.md` にも反映します。
+1. **Phase 1: Explore & Context (문맥 파악)**
+   - 작업 시작 전에 관련 코드, 디렉터리 구조, `package.json`의 의존성을 확인합니다.
+2. **Phase 2: Check Rules & Learnings (규약 및 과거 지식 확인)**
+   - 루트의 [AGENTS.md](AGENTS.md), [TECH.md](TECH.md), 그리고 [`.agents/learnings/`](.agents/learnings/)를 확인하여 변경 대상 영역(`scope`)과 관련된 과거 교훈 및 금지사항을 완전히 파악합니다.
+3. **Phase 3: Plan & Design (설계 및 계획)**
+   - SSR/CSR 경계, 상태 관리 범위, 스타일링 규약을 고려한 계획을 수립합니다.
+4. **Phase 4: Implement (구현)**
+   - 단일 책임 원칙, 엄격한 TypeScript 타입 정의, 글로벌 SCSS 토큰을 사용하여 구현합니다.
+5. **Phase 5: Validate (실행 검증 - 필수)**
+   - 코드 변경 후 **반드시 아래 검증 명령어를 실행하여 성공을 확인**합니다.
+     - 린트 검증: `yarn lint`
+     - 빌드 검증: `yarn build`
+6. **Phase 6: Record Learnings & Update Rules (지식 기록 및 규약 갱신)**
+   - 사용자 피드백이나 빌드/타입 체크 중 예기치 않은 오류를 해결한 경우, [`.agents/learnings/entries/<id>.md`](.agents/learnings/entries/)에 새로운 교훈을 기록하여 향후 작업 품질을 지속적으로 개선합니다. 기본 규칙은 루트 `AGENTS.md`에도 반영합니다.
 
 ---
 
-## 2. プロジェクトのアイデンティティとターゲット環境（Project Identity & Locale）
+## 2. 프로젝트 정체성 및 타겟 환경 (Project Identity & Locale)
 
-- **ターゲットロケール**: 日本（`Asia/Tokyo`, `ja`）。
-- **言語規約（Strict Constraint）**:
-  - UIラベル、ボタン名、ダイアログ文言、スナックバー通知メッセージ、メタデータタイトル/説明文、プレースホルダー、コード内コメントは、すべて**自然な日本語（丁寧語/敬体: です・ます）**で記述します。
-  - 不自然な直訳や他言語の混入を厳禁とします。
-- **SEO & AEO（AI回答エンジン最適化）およびRoute-First原則**:
-  - Webサービスとしての検索流入とAI推薦を最大化するため、Google等の検索エンジン（SEO）およびChatGPT・Perplexity・Gemini・Claude等のAI回答エンジン（AEO）双方に最適化されたセマンティックなHTML構造（`h1`〜`h3`, `main`, `article`, `section`）と明瞭な自然日本語テキストで設計します。
-  - **ダイアログ（モーダル）乱用の厳禁**:
-    - 固有のURLを持たないダイアログはクローラーやAI検索エンジンにインデックスされず、URL共有もできません。
-    - お知らせ、詳細画面、主要機能フローなどのコンテンツはダイアログで済ませず、**必ず個別のページ（ルート）として設計・提供**します。
-    - ダイアログの使用は、認証（ログイン/会員登録）や確認アラート（Confirm）など、ごく限定的な即時インタラクションのみに留めます。
-- **チーム開発と長期保守性のベストプラクティス（Maintainability First）**:
-  - コードは属人化や一時的な場当たり的ハックを排し、単一責任原則（SRP）、関心の分離、厳格な型安全性、一貫したディレクトリ配置を遵守したチーム開発のベストプラクティスで記述します。
-- **技術スタック**: Next.js 15+ (App Router), React 19, TypeScript 5, SCSS (`sass`), 独自デザインシステム（Dembrandtデザインインテリジェンス基盤）, Redux Toolkit。
-- **バックエンド通信**: Spring Boot / REST API（中央Axiosシングルトンインスタンス経由）。
-- **Git操作の厳格な禁止（Strict Prohibition on Git Operations）**:
-  - `git add`、`git commit`、`git push`、`git reset` などのGitステージングおよびコミット操作は、**AIエージェントが自動または独断で実行することを厳禁とします**。
-  - バージョン管理・コミット・プッシュのタイミングおよびスコープは、すべてユーザー自身が管理・判断します。
-
----
-
-## 3. コアアーキテクチャと境界規約（Core Architecture Boundaries）
-
-### 3.1. SSR / CSR分離（`*Client.tsx` デュアルファイルパターン）
-
-- インデックス対象の公開ページは、必ず**デュアルファイルパターン**を適用します。
-  - `page.tsx`: Server Component。`generateMetadata()`、初期SSRデータフェッチ、SEOを担当。
-  - `*Client.tsx`: Client Component (`"use client"`)。ブラウザ固有のインタラクションおよびUIステートを担当。
-- 管理画面やダッシュボードなどの完全認証前提のインタラクティブページは、`"use client"`単独の記述を許可します。
-
-### 3.2. 状態管理の境界（State Boundary）
-
-- **Redux Toolkit (`@/store`)**: `auth`、`notification`など、グローバルに維持されlocalStorageへ永続化（persist）が必要な状態に限定して使用します。
-- 任意のフィーチャースライスを無秩序にReduxに追加してはなりません。
-- 不要な外部サーバー状態管理ライブラリ（React Query, SWR, Zustandなど）を重複導入しないでください。
-
-### 3.3. API通信規約（API Layer）
-
-- ネイティブの`fetch()`やアドホックなAxiosインスタンスを直接生成してはなりません。
-- すべてのAPIリクエストは、中央シングルトン`@/api` (`ApiInstance`)および`@/api/service/*Service.ts`を経由します。
-- バックエンドのルート定数は`src/api/module/ApiRoutes.ts`に一元管理します。
-
-### 3.4. スタイリングおよび独自デザインシステム規約（Design System & Styling Boundaries）
-
-- **外部UIライブラリの完全排除（Strict Prohibition on Monolithic UI Libraries）**:
-  - 外部のUIコンポーネントライブラリやサードパーティ製UIキットの使用を全面的に禁止します。
-  - プロジェクトのすべてのUIコンポーネントは、プロジェクト固有のデザインシステム（`src/components/ui/*`）として軽量かつアクセシブルに自前実装します。
-- **Dembrandt基盤のデザインシステム・トークン運用原則（Dembrandt-Driven Token Management）**:
-  - プロジェクトのデザインシステムは、**Dembrandt**（`dembrandt <url> --design-md` / `--dtcg`）を実行して得られたコンソール結果および `DESIGN.md` を単一真実源（SSOT）としてプロジェクト単位で管理します。
-  - カラーパレット（primary, secondary, background, foreground, surface, borders, gray scale, status variants）、タイポグラフィスケール、スペーシング、角丸、シャドウなどの抽出トークンを `src/styles/base/_variables.scss` のCSSカスタムプロパティへ展開します。
-  - UIコンポーネントはすべて `src/styles/base/_variables.scss` のCSS変数を参照し、直接のカラーハードコードを厳禁とします。
-- **CSS Modules(`.module.scss`)およびTailwind CSSの使用は禁止します。**
-- **最上位ルートスコープの必須化（クラス名衝突の防止）**:
-  - コンポーネントやダイアログのSCSSは、必ず単一のルートクラス（例: `.auth-dialog-paper`, `.app-header`, `.home-container`）の内部にすべての下位要素をネストして記述します。
-  - ルートクラスの外側にフラットなクラスを独立定義すること（クラス名衝突・スタイル干渉の恐れ）を厳禁とします。
-- **モバイルタッチ干渉防止（`@include hover` の義務化）**:
-  - モバイル端末タップ時のホバー残留（sticky hover）干渉を防止するため、直接の `&:hover` や `a:hover` 記述を禁止します。
-  - 必ず `@/styles/base/mixins` の `@mixin hover`（`@media (hover: hover) and (pointer: fine)`）を使用してください。
-- JSX内でのインラインスタイル（`style={{ ... }}`）の記述を禁止します。
-- コンポーネント同伴スタイルシート（`Component.scss`）または`src/styles/pages/*.scss`を使用してください。
-- カラー、余白、シャドウ、高さは`src/styles/base/_variables.scss`および`_mixins.scss`の定義値を使用します。
-- **SCSSコードフォーマット規約（完全コンパクト記法）**:
-  - ルートセレクタの内部においては、プロパティ宣言直後、子セレクタ間、兄弟ブロック間、波括弧（`{}`）の前後を含め、**一切の不要な空行（改行）を挟まず完全に連続して記述**します。
-  - ファイル末尾の閉じ波括弧の後ろに複数の空行（余分な改行）を挿入せず、単一の改行のみで終了します。
-- **`!important` の使用厳禁**:
-  - CSS/SCSSにおいて `!important` を安易に使用することを禁止します。
-- **ページ追加時のスタイル構造化管理原則（`src/styles/pages/<route>.scss`）**:
-  - 新規ページ（ルート）を追加する際は、必ず `src/styles/pages/<route>.scss` に専用スタイルシートを作成し、ルート名と1対1で対応付けて構造化管理します。
-  - ページスタイルシートは最上位ページコンテナクラス（例: `.home-container`, `.notice-container`）で全体を完全にルートスコープします。
-
-### 3.5. 共通ラッパーライブラリおよび独自UIの遵守
-
-- **日時処理**: 生の`dayjs`を直接importせず、日本ロケール(`ja`)およびタイムゾーン(`Asia/Tokyo`)が設定された`@/common/lib/Dayjs`を必ず使用します。
-- **ユーザーフィードバック**: ブラウザネイティブの`window.alert()`を使用せず、`notistack`の`useSnackbar()`を使用します。
-- **モーダル/ダイアログ**: モバイルのブラウザバック(`popstate`)を安全に処理するプロジェクト独自デザインシステムのダイアログ`@/components/ui/Dialog`を使用します。（外部UIライブラリのダイアログは使用禁止）
-
-### 3.6. ルールおよびドキュメントの単一真実源（Single Source of Truth）原則
-
-- **サブディレクトリへのルールファイル分散の厳禁**:
-  - `src/**/AGENTS.md` のように、サブディレクトリ内にルールファイルや指示書を乱立・分散させてはなりません。
-  - ルールが分散するとエージェントの読み落としやトークン浪費、ルールの乖離を招きます。
-- **ルート `AGENTS.md` への集約義務**:
-  - AIエージェントが遵守すべきすべての行動憲法・スタイル規約・アーキテクチャ境界は、対話開始時にシステムプロンプトとして100%自動注入される**ルートの `AGENTS.md` に一元集約**します。
-  - ユーザーからのフィードバックや教訓は即座にルート `AGENTS.md`（または `TECH.md` / `ARCHITECTURE.md`）に反映し、二度と同じミスを繰り返さない持続的な品質向上を保証します。
-
+- **타겟 로케일**: 대한민국 (`Asia/Seoul`, `ko`).
+- **언어 규약 (Strict Constraint)**:
+  - UI 라벨, 버튼명, 다이얼로그 문구, 스낵바 알림 메시지, 메타데이터 타이틀/설명문, 플레이스홀더, 코드 내 주석은 모두 **자연스러운 한국어(존댓말: 해요체/하십시오체)**로 작성합니다.
+  - 부자연스러운 직역이나 타 언어 혼입을 엄격히 금지합니다.
+- **SEO & AEO (AI 답변 엔진 최적화) 및 Route-First 원칙**:
+  - 웹 서비스/홈페이지로서의 검색 유입과 AI 추천을 극대화하기 위해 구글 등 검색 엔진(SEO) 및 ChatGPT, Perplexity, Gemini, Claude 등 AI 답변 엔진(AEO) 양쪽에 최적화된 시맨틱 HTML 구조(`h1`~`h3`, `main`, `article`, `section`)와 명료한 자연 한국어 텍스트로 설계합니다.
+  - **다이얼로그 (모달) 남용 금지**:
+    - 고유 URL을 가지지 않는 다이얼로그는 크롤러나 AI 검색 엔진에 인덱싱되지 않으며 URL 공유도 불가능합니다.
+    - 공지사항, 상세 화면, 주요 기능 흐름 등의 콘텐츠는 다이얼로그로 때우지 말고 **반드시 개별 페이지(경로)로 설계 및 제공**합니다.
+    - 다이얼로그 사용은 인증(로그인/회원가입)이나 확인 알림(Confirm) 등 매우 제한적인 즉시 상호작용에만 국한합니다.
+- **팀 개발 및 장기 유지보수성 최우선 (Maintainability First)**:
+  - 코드는 개인적인 습관이나 임시방편을 배제하고 단일 책임 원칙(SRP), 관심사의 분리, 엄격한 타입 안전성, 일관된 디렉터리 배치를 준수한 팀 개발 베스트 프랙티스로 작성합니다.
+- **기술 스택**: Next.js 15+ (App Router), React 19, TypeScript 5, SCSS (`sass`), 자체 디자인 시스템 (Dembrandt 디자인 인텔리전스 기반), Redux Toolkit.
+- **백엔드 통신**: REST API (중앙 Axios 싱글톤 인스턴스 경유) 또는 순수 홈페이지일 경우 클라이언트 단독 기능.
+- **Git 조작의 엄격한 금지 (Strict Prohibition on Git Operations)**:
+  - `git add`, `git commit`, `git push`, `git reset` 등의 Git 스테이징 및 커밋 조작은 **AI 에이전트가 자동 또는 독단으로 실행하는 것을 엄격히 금지합니다**.
+  - 버전 관리, 커밋, 푸시의 타이밍과 범위는 모두 사용자가 직접 관리 및 판단합니다.
 
 ---
 
-## 4. 検証コマンド（Validation Commands）
+## 3. 코어 아키텍처와 경계 규약 (Core Architecture Boundaries)
 
-すべての作業完了後、エージェントは以下のコマンドを実行して正常性を検証します。
+### 3.1. SSR / CSR 분리 (`*Client.tsx` 듀얼 파일 패턴)
+
+- 인덱싱 대상 공개 페이지는 반드시 **듀얼 파일 패턴**을 적용합니다.
+  - `page.tsx`: Server Component. `generateMetadata()`, 초기 SSR 데이터 페치, SEO 담당.
+  - `*Client.tsx`: Client Component (`"use client"`). 브라우저 고유 인터랙션 및 UI 상태 담당.
+- 관리자 화면이나 대시보드 등 완전 인증 전제의 대화형 페이지는 `"use client"` 단독 작성을 허용합니다.
+
+### 3.2. 상태 관리 경계 (State Boundary)
+
+- **Redux Toolkit (`@/store`)**: `auth`, `notification` 등 전역적으로 유지되고 localStorage에 영속화(persist)가 필요한 상태에 한정하여 사용합니다.
+- 임의의 피처 슬라이스를 무질서하게 Redux에 추가하지 마십시오.
+- 불필요한 외부 서버 상태 관리 라이브러리(React Query, SWR, Zustand 등)를 중복 도입하지 마십시오.
+
+### 3.3. API 통신 규약 (API Layer)
+
+- 네이티브 `fetch()`나 임의의 Axios 인스턴스를 직접 생성하지 마십시오.
+- 모든 API 요청은 중앙 싱글톤 `@/api` (`ApiInstance`) 및 `@/api/service/*Service.ts`를 경유합니다.
+- 백엔드 경로 상수는 `src/api/module/ApiRoutes.ts`에 일원 관리합니다.
+
+### 3.4. 스타일링 및 자체 디자인 시스템 규약 (Design System & Styling Boundaries)
+
+- **외부 UI 라이브러리 완전 배제 (Strict Prohibition on Monolithic UI Libraries)**:
+  - 외부 UI 컴포넌트 라이브러리(MUI, Ant Design, Chakra 등)나 서드파티 UI 키트 사용을 전면 금지합니다.
+  - 프로젝트의 모든 UI 컴포넌트는 프로젝트 고유의 디자인 시스템(`src/components/ui/*`)으로 가볍고 접근성 있게 직접 구현합니다.
+- **Dembrandt 기반 디자인 시스템/토큰 운용 원칙 (Dembrandt-Driven Token Management)**:
+  - 프로젝트 디자인 시스템은 **Dembrandt**(`dembrandt <url> --design-md` / `--dtcg`)를 실행하여 얻은 콘솔 결과 및 `DESIGN.md`를 단일 진실 공급원(SSOT)으로 프로젝트 단위로 관리합니다.
+  - 색상 팔레트(primary, secondary, background, foreground, surface, borders, gray scale, status variants), 타이포그래피 스케일, 여백, 라운딩, 그림자 등의 추출 토큰을 `src/styles/base/_variables.scss`의 CSS 커스텀 속성(변수)으로 전개합니다.
+  - UI 컴포넌트는 모두 `src/styles/base/_variables.scss`의 CSS 변수를 참조하며, 직접적인 색상 하드코딩을 엄격히 금지합니다.
+- **CSS Modules(`.module.scss`) 및 Tailwind CSS 사용은 금지합니다.**
+- **최상위 루트 스코프 필수화 (클래스명 충돌 방지)**:
+  - 컴포넌트나 다이얼로그의 SCSS는 반드시 단일 루트 클래스(예: `.auth-dialog-paper`, `.app-header`, `.home-container`) 내부에 모든 하위 요소를 중첩(nest)하여 작성합니다.
+  - 루트 클래스 바깥에 독립적인 클래스를 정의하는 것(클래스명 충돌 및 스타일 간섭 위험)을 엄격히 금지합니다.
+- **모바일 터치 간섭 방지 (`@include hover` 의무화)**:
+  - 모바일 기기 탭 시 호버가 잔류하는 현상(sticky hover)을 방지하기 위해 직접적인 `&:hover`나 `a:hover` 작성을 금지합니다.
+  - 반드시 `@/styles/base/mixins`의 `@mixin hover`(`@media (hover: hover) and (pointer: fine)`)를 사용하세요.
+- JSX 내 인라인 스타일(`style={{ ... }}`) 작성을 금지합니다.
+- 컴포넌트 동반 스타일시트(`Component.scss`) 또는 `src/styles/pages/*.scss`를 사용하세요.
+- 색상, 여백, 그림자, 높이는 `src/styles/base/_variables.scss` 및 `_mixins.scss`의 정의값을 사용합니다.
+- **SCSS 코드 포맷 규약 (완전 컴팩트 표기법)**:
+  - 루트 셀렉터 내부에서는 속성 선언 직후, 자식 셀렉터 간, 형제 블록 간, 중괄호(`{}`) 전후를 포함하여 **어떠한 불필요한 빈 줄(개행)도 두지 않고 완전히 연속하여 작성**합니다.
+  - 파일 끝 닫는 중괄호 뒤에 여러 빈 줄을 넣지 않고 단일 개행으로 종료합니다.
+- **`!important` 사용 엄금**:
+  - CSS/SCSS에서 `!important`를 안이하게 사용하는 것을 금지합니다.
+- **페이지 추가 시 스타일 구조화 관리 원칙 (`src/styles/pages/<route>.scss`)**:
+  - 새 페이지(경로)를 추가할 때는 반드시 `src/styles/pages/<route>.scss`에 전용 스타일시트를 생성하고 경로명과 1대 1로 매핑하여 구조화 관리합니다.
+  - 페이지 스타일시트는 최상위 페이지 컨테이너 클래스(예: `.home-container`, `.about-container`)로 전체를 완전히 루트 스코핑합니다.
+
+### 3.5. 공통 래퍼 라이브러리 및 자체 UI 준수
+
+- **날짜/시간 처리**: 날 것의 `dayjs`를 직접 import하지 말고 한국 로케일(`ko`) 및 타임존(`Asia/Seoul`)이 설정된 `@/common/lib/Dayjs`를 반드시 사용합니다.
+- **사용자 피드백**: 브라우저 네이티브 `window.alert()`를 사용하지 말고 `notistack`의 `useSnackbar()`를 사용합니다.
+- **모달/다이얼로그**: 모바일 브라우저 뒤로가기(`popstate`)를 안전하게 처리하는 프로젝트 자체 디자인 시스템 다이얼로그 `@/components/ui/Dialog`를 사용합니다. (외부 UI 라이브러리 모달 사용 금지)
+
+### 3.6. 규칙 및 문서의 단일 진실 공급원 (Single Source of Truth) 원칙
+
+- **하위 디렉터리로의 규칙 파일 분산 엄금**:
+  - `src/**/AGENTS.md`처럼 하위 디렉터리 내에 규칙 파일이나 지시서를 난립/분산시켜서는 안 됩니다.
+  - 규칙이 분산되면 에이전트의 누락이나 토큰 낭비, 규칙 간 괴리를 초래합니다.
+- **루트 `AGENTS.md`로의 일원화 의무**:
+  - AI 에이전트가 준수해야 할 모든 행동 헌법, 스타일 규약, 아키텍처 경계는 대화 시작 시 시스템 프롬프트로 100% 자동 주입되는 **루트의 `AGENTS.md`에 일원 집약**합니다.
+  - 사용자 피드백이나 교훈은 즉시 루트 `AGENTS.md`(또는 `TECH.md` / `ARCHITECTURE.md`)에 반영하여 같은 실수를 반복하지 않는 지속적인 품질 향상을 보증합니다.
+
+---
+
+## 4. 검증 명령어 (Validation Commands)
+
+모든 작업 완료 후 에이전트는 아래 명령어를 실행하여 정상성을 검증합니다.
 
 ```bash
-# リント検証
+# 린트 검증
 yarn lint
 
-# プロダクションビルド検証（型チェックおよび静的ページ生成を含む）
+# 프로덕션 빌드 검증 (타입 체크 및 정적 페이지 생성 포함)
 yarn build
 ```

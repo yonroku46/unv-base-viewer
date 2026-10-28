@@ -17,11 +17,11 @@ export default function NotFound() {
     >
       <h1 style={{ fontSize: '3rem', fontWeight: 800 }}>404</h1>
       <p style={{ color: 'var(--gray-alpha-600)', fontSize: '1.125rem' }}>
-        ページが見つかりませんでした。
+        페이지를 찾을 수 없습니다.
       </p>
       <Link href="/">
         <Button variant="primary">
-          ホームへ戻る
+          홈으로 이동
         </Button>
       </Link>
     </div>

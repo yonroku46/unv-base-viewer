@@ -10,9 +10,9 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} {config.service.copyright} All rights reserved.
         </div>
         <div className="footer-links">
-          <Link href="/terms">利用規約</Link>
-          <Link href="/privacy">プライバシーポリシー</Link>
-          <Link href="/contact">お問い合わせ</Link>
+          <Link href="/terms">이용약관</Link>
+          <Link href="/privacy">개인정보처리방침</Link>
+          <Link href="/contact">문의하기</Link>
         </div>
       </div>
     </footer>

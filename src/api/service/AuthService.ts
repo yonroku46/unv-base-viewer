@@ -28,7 +28,7 @@ export const AuthService = (dispatch: AppDispatch = store.dispatch) => {
   };
 
   /**
-   * メール・パスワードログイン
+   * 이메일/비밀번호 로그인
    */
   const login = async (params: LoginParams): Promise<BaseResponse<User>> => {
     const response: any = await ApiInstance.post(ApiRoutes.LOGIN, {
@@ -44,7 +44,7 @@ export const AuthService = (dispatch: AppDispatch = store.dispatch) => {
   };
 
   /**
-   * 新規会員登録
+   * 신규 회원가입
    */
   const signup = async (params: SignupParams): Promise<BaseResponse<User>> => {
     const response: any = await ApiInstance.post(ApiRoutes.SIGNUP, {
@@ -61,7 +61,7 @@ export const AuthService = (dispatch: AppDispatch = store.dispatch) => {
   };
 
   /**
-   * Googleログイン (Credential / OAuth code)
+   * Google 로그인 (Credential / OAuth code)
    */
   const googleLogin = async (params: GoogleLoginParams): Promise<BaseResponse<User>> => {
     const response: any = await ApiInstance.post(ApiRoutes.GOOGLE_LOGIN, params);
@@ -73,7 +73,7 @@ export const AuthService = (dispatch: AppDispatch = store.dispatch) => {
   };
 
   /**
-   * Google OAuthコールバック (認可コード)
+   * Google OAuth 콜백 (인가 코드)
    */
   const getGoogleAccessToken = async (code: string): Promise<BaseResponse<User>> => {
     const response: any = await ApiInstance.get(ApiRoutes.GOOGLE_OAUTH, {
@@ -87,7 +87,7 @@ export const AuthService = (dispatch: AppDispatch = store.dispatch) => {
   };
 
   /**
-   * 現在ログイン中のユーザープロフィール取得
+   * 현재 로그인 사용자 프로필 조회
    */
   const getMe = async (): Promise<BaseResponse<User>> => {
     const response: any = await ApiInstance.get(ApiRoutes.USER_ME);
@@ -98,7 +98,7 @@ export const AuthService = (dispatch: AppDispatch = store.dispatch) => {
   };
 
   /**
-   * ログアウト
+   * 로그아웃
    */
   const performLogout = async (): Promise<void> => {
     try {
@@ -111,7 +111,7 @@ export const AuthService = (dispatch: AppDispatch = store.dispatch) => {
   };
 
   /**
-   * トークンリフレッシュ
+   * 토큰 갱신
    */
   const refreshToken = async (token?: string): Promise<BaseResponse<User>> => {
     const currentRefreshToken = token || store.getState().auth.currentUser?.refreshToken;

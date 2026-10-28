@@ -1,46 +1,46 @@
 ---
 name: manage-design-system
-description: Dembrandtを使用したデザインシステムトークン抽出、DESIGN.mdおよび_variables.scssへの反映、および独自UIコンポーネント作成スキル
+description: Dembrandt를 사용한 디자인 시스템 토큰 추출, DESIGN.md 및 _variables.scss 반영, 자체 UI 컴포넌트 생성 스킬
 ---
 
-# Dembrandt基盤デザインシステム管理ワークフロー（Design System Workflow）
+# Dembrandt 기반 디자인 시스템 관리 워크플로우 (Design System Workflow)
 
-> **原則**: 本プロジェクトでは外部UIコンポーネントライブラリに依存せず、**Dembrandt**を活用してプロジェクトごとに独立したデザインシステム（トークンおよび独自コンポーネント群）を構築・運用します。
+> **원칙**: 본 프로젝트에서는 외부 UI 컴포넌트 라이브러리에 의존하지 않고, **Dembrandt**를 활용하여 프로젝트별 독립적인 디자인 시스템(토큰 및 자체 컴포넌트군)을 구축 및 운영합니다.
 
 ---
 
-## 1. Dembrandt によるトークン抽出と更新手順
+## 1. Dembrandt를 통한 토큰 추출 및 갱신 절차
 
-ブランドやリファレンスサイトからデザインシステムを導出する場合、以下の手順で実行します。
+브랜드나 레퍼런스 사이트로부터 디자인 시스템을 도출할 때는 아래 절차로 실행합니다.
 
-### 1.1. Dembrandt コマンドの実行
+### 1.1. Dembrandt 명령어 실행
 ```bash
-# 1. AI向けデザイン仕様書 (DESIGN.md) の生成
+# 1. AI용 디자인 명세서 (DESIGN.md) 생성
 npx dembrandt <target-url> --design-md
 
-# 2. W3C標準 DTCGトークン (JSON) の抽出
+# 2. W3C 표준 DTCG 토큰 (JSON) 추출
 npx dembrandt <target-url> --dtcg
 ```
 
-### 1.2. `DESIGN.md` の更新
-Dembrandtのコンソール出力および生成されたMarkdownをルートの `DESIGN.md` に集約・反映します。
-- カラーパレット（Primary, Secondary, Background, Foreground, Surface, Muted, Status）
-- タイポグラフィ（Font Family, Font Scale, Font Weights, Line Heights）
-- スペーシング（4px/8pxグリッドベース）
-- 角丸（Border Radii）
-- ボックスシャドウ（Box Shadows / Elevations）
-- トランジション（Transitions / Timing Functions）
+### 1.2. `DESIGN.md` 갱신
+Dembrandt의 콘솔 출력 및 생성된 마크다운을 루트의 `DESIGN.md`에 집약 및 반영합니다.
+- 색상 팔레트 (Primary, Secondary, Background, Foreground, Surface, Muted, Status)
+- 타이포그래피 (Font Family, Font Scale, Font Weights, Line Heights)
+- 간격 (4px/8px 그리드 베이스)
+- 모서리 라운딩 (Border Radii)
+- 박스 그림자 (Box Shadows / Elevations)
+- 트랜지션 (Transitions / Timing Functions)
 
 ---
 
-## 2. `_variables.scss` へのトークン展開
+## 2. `_variables.scss`로의 토큰 전개
 
-`DESIGN.md` で合意・抽出されたトークンを、`src/styles/base/_variables.scss` のCSSカスタムプロパティへ反映します。
+`DESIGN.md`에서 합의 및 추출된 토큰을 `src/styles/base/_variables.scss`의 CSS 커스텀 속성에 반영합니다.
 
 ```scss
 // src/styles/base/_variables.scss
 :root {
-  // カラーパレット
+  // 색상 팔레트
   --primary-color: #2563eb;
   --primary-color-hover: #1d4ed8;
   --primary-color-bg: #eff6ff;
@@ -50,7 +50,7 @@ Dembrandtのコンソール出力および生成されたMarkdownをルートの
   --surface: #f8fafc;
   --border: #e2e8f0;
 
-  // タイポグラフィ
+  // 타이포그래피
   --font-xs: 0.75rem;
   --font-sm: 0.875rem;
   --font-base: 1rem;
@@ -58,7 +58,7 @@ Dembrandtのコンソール出力および生成されたMarkdownをルートの
   --font-xl: 1.25rem;
   --font-2xl: 1.5rem;
 
-  // スペーシング
+  // 간격
   --space-1: 0.25rem; // 4px
   --space-2: 0.5rem;  // 8px
   --space-3: 0.75rem; // 12px
@@ -66,7 +66,7 @@ Dembrandtのコンソール出力および生成されたMarkdownをルートの
   --space-6: 1.5rem;  // 24px
   --space-8: 2rem;    // 32px
 
-  // 角丸・シャドウ
+  // 라운딩 및 그림자
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -74,7 +74,7 @@ Dembrandtのコンソール出力および生成されたMarkdownをルートの
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-// ダークモード対応
+// 다크 모드 대응
 [data-theme="dark"] {
   --background: #0f172a;
   --foreground: #f8fafc;
@@ -85,11 +85,11 @@ Dembrandtのコンソール出力および生成されたMarkdownをルートの
 
 ---
 
-## 3. `src/components/ui/` での独自UIコンポーネント作成
+## 3. `src/components/ui/`에서 자체 UI 컴포넌트 생성
 
-すべてのUIコンポーネントは、サードパーティライブラリを介さず、純粋なReact + TypeScript + 同伴SCSS（`<Component>.scss`）で自己完結型として作成します。
+모든 UI 컴포넌트는 서드파티 라이브러리를 거치지 않고 순수 React + TypeScript + 동반 SCSS(`<Component>.scss`)로 자체 완결형으로 생성합니다.
 
-### 3.1. ディレクトリ構造
+### 3.1. 디렉터리 구조
 ```
 src/components/ui/
   ├─ Button/
@@ -104,9 +104,9 @@ src/components/ui/
   └─ index.ts
 ```
 
-### 3.2. コンポーネント実装の必須要件
-1. **トークン参照の徹底**: カラーや余白などのスタイル値はハードコードせず、必ず `var(--...)` を使用します。
-2. **最上位ルートスコープ**: コンポーネントSCSSは単一のルートクラス（例: `.ui-button`, `.ui-dialog-backdrop`）内に全要素をネストします。
-3. **モバイルホバー保護**: ホバースタイルには必ず `@include hover` を適用します。
-4. **アクセシビリティ**: 適切なARIA属性（`aria-label`, `aria-hidden`, `role` 等）およびキーボード操作（Escapeキーでモーダル閉じる等）を実装します。
-5. **ブラウザバックセーフ（Dialog）**: モーダル/ダイアログは `popstate` イベントをハンドリングし、モバイルの戻る操作で安全に閉じるように設計します。
+### 3.2. 컴포넌트 구현 필수 요건
+1. **토큰 참조 철저**: 색상이나 여백 등 스타일 값은 하드코딩하지 않고 반드시 `var(--...)`를 사용합니다.
+2. **최상위 루트 스코프**: 컴포넌트 SCSS는 단일 루트 클래스(예: `.ui-button`, `.ui-dialog-backdrop`) 내에 모든 요소를 중첩합니다.
+3. **모바일 호버 보호**: 호버 스타일에는 반드시 `@include hover`를 적용합니다.
+4. **접근성(Accessibility)**: 적절한 ARIA 속성(`aria-label`, `aria-hidden`, `role` 등) 및 키보드 조작(Escape 키로 모달 닫기 등)을 구현합니다.
+5. **브라우저 뒤로가기 안전 (Dialog)**: 모달/다이얼로그는 `popstate` 이벤트를 처리하여 모바일 뒤로가기 동작 시 안전하게 닫히도록 설계합니다.

@@ -5,7 +5,7 @@ import { config } from '@/config';
 import Button from '@/components/ui/Button/Button';
 import '@/styles/pages/home.scss';
 
-// 軽量なインラインSVGアイコン（外部UIライブラリ非依存）
+// 경량 인라인 SVG 아이콘 (외부 UI 라이브러리 비의존)
 function RocketIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -50,18 +50,18 @@ export default function HomeClient() {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleTestNotice = () => {
-    enqueueSnackbar(`${config.service.name} サービスへようこそ！`, { variant: 'success' });
+    enqueueSnackbar(`${config.service.name} 서비스에 오신 것을 환영합니다!`, { variant: 'success' });
   };
 
   return (
     <div className="home-container">
       <section className="hero-section">
         <h1>
-          次世代の <span>{config.service.name}</span> プラットフォーム
+          차세대 <span>{config.service.name}</span> 플랫폼
         </h1>
         <p>
-          Next.js App Router、Dembrandt独自デザインシステム、Redux Toolkit、SCSSを活用した、
-          高速で拡張性の高いモダンなウェブアプリケーションの基盤です。
+          Next.js App Router, 자체 디자인 시스템, Redux Toolkit, SCSS를 활용한,
+          빠르고 확장성 높은 모던 웹 애플리케이션의 기반입니다.
         </p>
         <div className="cta-buttons">
           <Button
@@ -70,10 +70,10 @@ export default function HomeClient() {
             startIcon={<RocketIcon />}
             onClick={handleTestNotice}
           >
-            通知テスト
+            알림 테스트
           </Button>
           <Button variant="outlined" size="lg">
-            ドキュメントを見る
+            문서 보기
           </Button>
         </div>
       </section>
@@ -85,7 +85,7 @@ export default function HomeClient() {
           </div>
           <h3>Next.js 15+ App Router</h3>
           <p>
-            SSR/CSRの分離パターンにより、SEOとインタラクティブ性の両立を実現します。
+            SSR/CSR 분리 패턴을 통해 SEO와 인터랙티브성의 최적 균형을 제공합니다.
           </p>
         </div>
 
@@ -93,9 +93,9 @@ export default function HomeClient() {
           <div className="icon-wrapper">
             <ShieldIcon />
           </div>
-          <h3>堅牢な状態管理</h3>
+          <h3>견고한 상태 관리</h3>
           <p>
-            Redux Toolkitとredux-persistによる安全で予測可能なステート永続化。
+            Redux Toolkit과 redux-persist 기반의 안전하고 예측 가능한 상태 영속화.
           </p>
         </div>
 
@@ -103,9 +103,9 @@ export default function HomeClient() {
           <div className="icon-wrapper">
             <PaletteIcon />
           </div>
-          <h3>Dembrandt デザインシステム</h3>
+          <h3>자체 디자인 시스템</h3>
           <p>
-            外部ライブラリ非依存の軽量コンポーネントと、完全なトークン一元管理体系。
+            외부 라이브러리에 의존하지 않는 경량 컴포넌트와 완전한 토큰 일원화 체계.
           </p>
         </div>
       </div>

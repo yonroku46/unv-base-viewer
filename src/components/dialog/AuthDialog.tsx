@@ -21,11 +21,11 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
   const [currentTab, setCurrentTab] = useState<number>(defaultTab === 'signup' ? 1 : 0);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // ログインフォーム状態
+  // 로그인 폼 상태
   const [loginEmail, setLoginEmail] = useState<string>('');
   const [loginPassword, setLoginPassword] = useState<string>('');
 
-  // 新規登録フォーム状態
+  // 회원가입 폼 상태
   const [signupName, setSignupName] = useState<string>('');
   const [signupEmail, setSignupEmail] = useState<string>('');
   const [signupPassword, setSignupPassword] = useState<string>('');
@@ -46,7 +46,7 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginEmail || !loginPassword) {
-      enqueueSnackbar('メールアドレスとパスワードを入力してください。', { variant: 'warning' });
+      enqueueSnackbar('이메일과 비밀번호를 입력해주세요.', { variant: 'warning' });
       return;
     }
 
@@ -56,12 +56,12 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
         email: loginEmail,
         password: loginPassword,
       });
-      enqueueSnackbar('ログインしました。', { variant: 'success' });
+      enqueueSnackbar('로그인되었습니다.', { variant: 'success' });
       handleDialogClose();
     } catch (error: any) {
       const message =
         error?.response?.data?.information?.[0]?.message ||
-        'ログインに失敗しました。メールアドレスまたはパスワードをご確認ください。';
+        '로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.';
       enqueueSnackbar(message, { variant: 'error' });
     } finally {
       setLoading(false);
@@ -71,12 +71,12 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!signupName || !signupEmail || !signupPassword) {
-      enqueueSnackbar('すべての項目を入力してください。', { variant: 'warning' });
+      enqueueSnackbar('모든 항목을 입력해주세요.', { variant: 'warning' });
       return;
     }
 
     if (signupPassword.length < 6) {
-      enqueueSnackbar('パスワードは6文字以上で入力してください。', { variant: 'warning' });
+      enqueueSnackbar('비밀번호는 6자 이상으로 입력해주세요.', { variant: 'warning' });
       return;
     }
 
@@ -87,12 +87,12 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
         email: signupEmail,
         password: signupPassword,
       });
-      enqueueSnackbar('アカウント登録が完了しました。', { variant: 'success' });
+      enqueueSnackbar('회원가입이 완료되었습니다.', { variant: 'success' });
       handleDialogClose();
     } catch (error: any) {
       const message =
         error?.response?.data?.information?.[0]?.message ||
-        '新規登録に失敗しました。既に使用されているメールアドレスの可能性があります。';
+        '회원가입에 실패했습니다. 이미 사용 중인 이메일일 수 있습니다.';
       enqueueSnackbar(message, { variant: 'error' });
     } finally {
       setLoading(false);
@@ -104,14 +104,14 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
     try {
       await authService.googleLogin({
         email: 'google-user@univus.com',
-        name: 'Google ユーザー',
+        name: 'Google 사용자',
       });
-      enqueueSnackbar('Googleアカウントでログインしました。', { variant: 'success' });
+      enqueueSnackbar('Google 계정으로 로그인되었습니다.', { variant: 'success' });
       handleDialogClose();
     } catch (error: any) {
       const message =
         error?.response?.data?.information?.[0]?.message ||
-        'Googleログインに失敗しました。もう一度お試しください。';
+        'Google 로그인에 실패했습니다. 다시 시도해주세요.';
       enqueueSnackbar(message, { variant: 'error' });
     } finally {
       setLoading(false);
@@ -135,7 +135,7 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
             className={`auth-tab ${currentTab === 0 ? 'auth-tab--active' : ''}`}
             onClick={() => setCurrentTab(0)}
           >
-            ログイン
+            로그인
           </button>
           <button
             type="button"
@@ -144,14 +144,14 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
             className={`auth-tab ${currentTab === 1 ? 'auth-tab--active' : ''}`}
             onClick={() => setCurrentTab(1)}
           >
-            新規登録
+            회원가입
           </button>
         </div>
 
         {currentTab === 0 && (
           <form onSubmit={handleLoginSubmit} className="auth-form">
             <Input
-              label="メールアドレス"
+              label="이메일"
               type="email"
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
@@ -161,7 +161,7 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
               placeholder="example@domain.com"
             />
             <Input
-              label="パスワード"
+              label="비밀번호"
               type="password"
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
@@ -177,7 +177,7 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
               loading={loading}
               className="auth-submit-btn"
             >
-              ログイン
+              로그인
             </Button>
           </form>
         )}
@@ -185,16 +185,16 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
         {currentTab === 1 && (
           <form onSubmit={handleSignupSubmit} className="auth-form">
             <Input
-              label="お名前"
+              label="이름"
               value={signupName}
               onChange={(e) => setSignupName(e.target.value)}
               required
               autoComplete="name"
               disabled={loading}
-              placeholder="山田 太郎"
+              placeholder="홍길동"
             />
             <Input
-              label="メールアドレス"
+              label="이메일"
               type="email"
               value={signupEmail}
               onChange={(e) => setSignupEmail(e.target.value)}
@@ -204,14 +204,14 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
               placeholder="example@domain.com"
             />
             <Input
-              label="パスワード"
+              label="비밀번호"
               type="password"
               value={signupPassword}
               onChange={(e) => setSignupPassword(e.target.value)}
               required
               autoComplete="new-password"
               disabled={loading}
-              helperText="6文字以上の英数字を入力してください"
+              helperText="6자 이상의 영문/숫자를 입력해주세요"
             />
             <Button
               type="submit"
@@ -221,13 +221,13 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
               loading={loading}
               className="auth-submit-btn"
             >
-              アカウント登録
+              회원가입
             </Button>
           </form>
         )}
 
         <div className="auth-divider">
-          <span>または</span>
+          <span>또는</span>
         </div>
 
         <Button
@@ -258,7 +258,7 @@ export default function AuthDialog({ open, onClose, defaultTab = 'login' }: Auth
             </svg>
           }
         >
-          Googleでログイン
+          Google 계정으로 로그인
         </Button>
       </div>
     </Dialog>

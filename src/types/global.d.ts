@@ -9,7 +9,7 @@ declare global {
     token?: string;
     refreshToken?: string;
     roleId?: number;
-    // エイリアス
+    // 별칭 (alias)
     id?: string;
     email?: string;
     name?: string;

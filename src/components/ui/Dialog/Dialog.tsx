@@ -25,7 +25,7 @@ export function Dialog({
   showCloseButton = true,
   className = '',
 }: DialogProps) {
-  // ESCキーでの閉鎖
+  // ESC 키 입력 시 닫기
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -35,7 +35,7 @@ export function Dialog({
     [onClose]
   );
 
-  // ブラウザバック (popstate) の安全なハンドリング
+  // 브라우저 뒤로가기 (popstate) 안전 처리
   useEffect(() => {
     if (!open) return;
 
@@ -48,7 +48,7 @@ export function Dialog({
     window.addEventListener('popstate', handlePopState);
     window.addEventListener('keydown', handleKeyDown);
 
-    // スクロール固定
+    // 배경 스크롤 방지
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
@@ -90,7 +90,7 @@ export function Dialog({
                 type="button"
                 className="ui-dialog-close"
                 onClick={onClose}
-                aria-label="閉じる"
+                aria-label="닫기"
               >
                 ✕
               </button>

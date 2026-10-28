@@ -31,13 +31,13 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await authService.logout();
-      enqueueSnackbar('ログアウトしました。', { variant: 'info' });
+      enqueueSnackbar('로그아웃되었습니다.', { variant: 'info' });
     } catch {
-      enqueueSnackbar('ログアウト処理中にエラーが発生しました。', { variant: 'error' });
+      enqueueSnackbar('로그아웃 처리 중 오류가 발생했습니다.', { variant: 'error' });
     }
   };
 
-  const displayName = currentUser?.name || currentUser?.userName || currentUser?.email || 'ユーザー';
+  const displayName = currentUser?.name || currentUser?.userName || currentUser?.email || '사용자';
 
   return (
     <>
@@ -47,8 +47,8 @@ export default function Header() {
             <span>{config.service.name}</span>
           </Link>
           <nav className="nav-links">
-            <Link href="/">ホーム</Link>
-            <Link href="/about">概要</Link>
+            <Link href="/">홈</Link>
+            <Link href="/about">소개</Link>
 
             {isAuthenticated ? (
               <div className="user-profile-badge">
@@ -62,7 +62,7 @@ export default function Header() {
                   className="logout-btn"
                   onClick={handleLogout}
                 >
-                  ログアウト
+                  로그아웃
                 </Button>
               </div>
             ) : (
@@ -71,7 +71,7 @@ export default function Header() {
                 size="sm"
                 onClick={handleOpenAuthDialog}
               >
-                ログイン
+                로그인
               </Button>
             )}
           </nav>
